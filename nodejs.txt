@@ -1,0 +1,98 @@
+C:\SoftWare\nodejs\node_global\node_modules\nrm\cli.js
+
+
+npm link操作方法
+
+每次要打包
+1.在vue-frame-crm控制台中 npm run build
+2.vue-frame-crm		npm link
+3.在sa-order-web控制台中 npm link vue-frame-crm
+4.sa-order-web		ipu dev -p 8080
+
+每次不用打包
+sa-order-web中routes.js里面将 import { views } from 'vue-frame-crm' 改为 import { views } from 'vue-frame-crm/src'
+每次只用运行ipu dev -p 8080就行
+
+
+打包发布：
+1，打包  npm run build 
+2. package.json 改版本号 version
+3. 在命令行里登录npm账号 npm login
+ samhong
+ Hong@410g
+ 466064010@qq.com
+4. npm publish
+https://www.npmjs.com/package/vue-frame-crm
+
+
+（1）不用做登录校验
+首先, 在你需要忽略登录的路由定义对象上加上 meta 属性，例如：
+
+const routes = [{
+  name: '登录',
+  path: '/login',
+  component: login,
+  meta: { breadName: '登录', title: '登录中国邮政CRM', noLogin: true }
+}, {
+  name: '忘记密码',
+  path: '/fogetpassword',
+  component: forgetPass,
+  meta: { breadName: '忘记密码', title: '忘记密码' , noLogin: true }
+}
+]
+
+然后在全局路由钩子函数中根据这个 noLogin 属性做控制，例如：
+
+router.beforeEach((to, from, next) => {
+  // ... ...
+  if (!to.meta.noLogin && router.app.$store.state.login.success === false) {
+    router.push({ path: '/login' }) // 需要登录并且未登录则跳转到登录视图
+  } else {
+    next() // 其他情况继续渲染视图
+  }
+})
+路由全局钩子应该已经在 router.js 里定义了，自己找找
+
+（2）在http.js里面
+/**
+ * 请求拦截器
+ * @param config
+ * @returns {*}
+ */
+function requestInterceptor(config) {
+    // 添加请求拦截器实现逻辑...
+    // 请求计数器加一
+    http.reqNum = http.reqNum + 1
+
+
+    // 若是有做鉴权token , 就给头部带上token
+    let token = storage.get('cmi-token')
+    let lang = storage.get('aid-language')
+    if (token) {
+        config.headers.Authorization = token
+    }else if(window.location.href.indexOf('register')>-1 || window.location.href.indexOf('forgot-password')>-1
+        || window.location.href.indexOf('cmi-confirm')>-1){
+      config.headers.Authorization = token
+    } else {
+        // 未登录跳转到登录页面
+        router.replace('/', () => {
+            // onComplete
+            TMessage.warning(lang === 'zh-cn' ? '请登录后访问...' : 'login first', 2)
+        }, () => {
+            // onAbort
+        })
+    }
+    if (config.url.indexOf('auth') === -1) {
+        loadingInstance.start()
+    }
+    // let userAgent = navigator.userAgent.toLowerCase();
+    // console.info(userAgent)
+    // if(userAgent.match(/msie ([\d.]+)/)){
+    config.url = config.url + (config.url.indexOf('?') != -1 ? '&t=' : '?t=') + Math.random()
+    // }
+
+    // TMessage.info('axios 请求开始...')
+    // TGlobalLoading.start()
+    // loadingInstance.start()
+    return config
+}
