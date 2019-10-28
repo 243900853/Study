@@ -1,0 +1,33 @@
+--创建本地仓库
+git init
+--本地创建ssh key
+ssh-keygen -t rsa -C "邮箱"
+--判断密钥是否配置成功
+ssh -T git@github.com
+Hi 243900853! You've successfully authenticated, but GitHub does not provide shell access.
+
+--要提交的文件
+git status
+--将提交文件存入缓存
+git add .
+--添加备注
+git commit -m "备注"
+--提交
+git push
+git push --set-upstream https://github.com/243900853/SpirngBoot.git master
+--更新
+git pull
+
+--设置默认参数
+git remote add origin https://github.com/243900853/SpirngBoot.git
+git push
+
+--添加“目标地址”参数
+git push git@git@github.com:243900853/SpirngBoot.git
+
+--设置用户名
+git config --global user.name taotaoo
+--设置密码
+git config --global user.password taotaoo
+--查看所有配置
+git config --list
