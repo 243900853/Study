@@ -14,6 +14,8 @@ origin https://github.com/someaccount/someproject.git (push)
 已上结果是使用https协议，我们可以换成ssh协议
 git remote set-url origin git@github.com:243900853/Study.git
 
+参考资料：https://www.cnblogs.com/superGG1990/p/6844952.html
+
 --要提交的文件
 git status
 --将提交文件存入缓存
