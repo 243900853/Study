@@ -2,9 +2,17 @@
 git init
 --本地创建ssh key
 ssh-keygen -t rsa -C "邮箱"
+--配置公钥
+C:\Users\XiaoBi\.ssh\id_rsa.pub配置到SSH keys里面
 --判断密钥是否配置成功
 ssh -T git@github.com
 Hi 243900853! You've successfully authenticated, but GitHub does not provide shell access.
+--查看你当前的 remote url
+git remote -v
+origin https://github.com/someaccount/someproject.git (fetch)
+origin https://github.com/someaccount/someproject.git (push)
+已上结果是使用https协议，我们可以换成ssh协议
+git remote set-url origin git@github.com:243900853/Study.git
 
 --要提交的文件
 git status
@@ -33,3 +41,7 @@ git config --global user.name taotaoo
 git config --global user.password taotaoo
 --查看所有配置
 git config --list
+--删除配置
+git config --global --unset http.proxy
+--获取某个配置
+git config --get http.proxy
