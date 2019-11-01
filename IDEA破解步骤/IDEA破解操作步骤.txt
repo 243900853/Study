@@ -1,0 +1,10 @@
+方法一：有效时间2089年
+第一步：正常打开IDEA
+第二步：Help--Edit Custom VM Options...
+添加-javaagent:D:\SoftWare\IDEA\bin\jetbrains-agent.jar
+第三步：将jetbrains-agent.jar放到D:\SoftWare\IDEA\bin\目录下
+第四步：重启IDEA
+第五步：Help--Register
+输入IDEA破解码
+
+方法二：直接输入激活码全家桶，这个有效时间2020-7月份
