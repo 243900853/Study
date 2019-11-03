@@ -12,6 +12,6 @@ public class XBService implements XB{
 	FamilyService familyService;
 
 	public XBService() {
-		System.out.println("print xb");
+		System.out.println("print XBService");
 	}
 }

@@ -8,11 +8,14 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.stereotype.Component;
 
-//@Component
+@Component
+//后置处理器  修改BeanDefinition
 public class XbPostProcessor implements BeanFactoryPostProcessor {
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		GenericBeanDefinition familyService = (GenericBeanDefinition)beanFactory.getBeanDefinition("familyService");
-		familyService.setBeanClass(XBService.class);
+//		familyService.setBeanClass(XBService.class);
+		System.out.println("familyService自动注入模型是："+familyService.getAutowireMode());
+		System.out.println("后置处理器，修改BeanDefinition");
 	}
 }

@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
 		>
-	<bean init-method="liftAfterInit" id="familyService" class="com.xiaobi.service.FamilyService">
+	<bean init-method="xmlInit" id="familyService" class="com.xiaobi.service.FamilyService">
 		<!-- Set注入 -->
 <!--		<property name="XBService">-->
 <!--			<ref bean="xbBean"></ref>-->
@@ -11,5 +11,5 @@
 		<!-- 构造器注入,构造器注入和Set注入不能在同时存在 -->
 <!--		<constructor-arg ref="xbBean"></constructor-arg>-->
 	</bean>
-	<bean id="xbBean" class="com.xiaobi.service.XBService"></bean>
+	<bean id="xbService" class="com.xiaobi.service.XBService"></bean>
 </beans>
