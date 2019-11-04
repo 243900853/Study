@@ -242,6 +242,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		//可以简单的认为就是对beanName做一个校验特殊字符串的功能
 		//transformedBeanName(name)这里的name就是bean的名字
 		//验证bean的名字是否非法
+		//和FactoryBean有关
 		final String beanName = transformedBeanName(name);
 		//定义了一个对象，用来存将来返回出来的bean
 		Object bean;
