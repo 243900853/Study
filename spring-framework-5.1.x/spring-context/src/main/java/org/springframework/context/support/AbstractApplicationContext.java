@@ -529,8 +529,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
-				//完成扫描
-				// 1、将所有扫描出来的BeanDefinition对象放到BeanDefinitionMap这个Map集合中
+				//完成扫描和解析
+				// 1、将所有扫描出来的BeanDefinition对象（单例、原型）放到BeanDefinitionMap这个Map集合中
 				// 2、将所有BeanDefinition对象的名字存放到beanDefinitionNames这个list集合中
 				invokeBeanFactoryPostProcessors(beanFactory);
 
@@ -551,6 +551,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Instantiate all remaining (non-lazy-init) singletons.
 				//Spring完成初始化bean的过程，完成Spring生命周期  比如创建对象，调用构造方法，aop动态代理，
+				//开始实例化单例的类  完成validate 和 life
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.

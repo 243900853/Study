@@ -158,6 +158,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	String[] getDependsOn();
 
 	/**
+	 * 设置是否参与自动装配的候选对象。
 	 * Set whether this bean is a candidate for getting autowired into some other bean.
 	 * <p>Note that this flag is designed to only affect type-based autowiring.
 	 * It does not affect explicit references by name, which will get resolved even
@@ -172,6 +173,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	boolean isAutowireCandidate();
 
 	/**
+	 * 设置是否是主要参与的候选对象。
 	 * Set whether this bean is a primary autowire candidate.
 	 * <p>If this value is {@code true} for exactly one bean among multiple
 	 * matching candidates, it will serve as a tie-breaker.
@@ -197,6 +199,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	String getFactoryBeanName();
 
 	/**
+	 * 设置返回出去的对象
 	 * Specify a factory method, if any. This method will be invoked with
 	 * constructor arguments, or with no arguments if none are specified.
 	 * The method will be invoked on the specified factory bean, if any,
