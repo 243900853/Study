@@ -80,7 +80,6 @@ public class DynamicProxy {
 			methodContent.append(tab+"}"+line);
 		}
 		content = packageContent+importContent+clazzFirstLineContent+filedContent+constructorContent+methodContent+"}";
-
 		
 		try {
 			String packageStr = DynamicProxy.class.getPackage().getName().replace(".","/");
