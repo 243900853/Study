@@ -81,6 +81,7 @@ public class DynamicProxy {
 		}
 		content = packageContent+importContent+clazzFirstLineContent+filedContent+constructorContent+methodContent+"}";
 
+		
 		try {
 			String packageStr = DynamicProxy.class.getPackage().getName().replace(".","/");
 //			File file = new File("d:\\com\\$Proxy.java");
