@@ -1,5 +1,5 @@
 package com.xiaobi.proxy;
 
 public interface Service {
-	public void query();
+	public String query(String name);
 }

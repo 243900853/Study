@@ -1,5 +1,9 @@
 package com.xiaobi.mybatis;
 
+import com.xiaobi.proxy.DynamicProxy;
+import com.xiaobi.proxy.IndexService;
+import com.xiaobi.proxy.Service;
+
 import java.lang.reflect.Proxy;
 
 public class FamilyFactory {
@@ -12,6 +16,7 @@ public class FamilyFactory {
 	public static Object getMapper(Class clazz){
 		Class[] classes = new Class[]{clazz};
 		Object o = Proxy.newProxyInstance(FamilyFactory.class.getClassLoader(),classes,new FamilyInvocationHandler());
+
 		return o;
 	}
 }

@@ -8,8 +8,9 @@ public class PowerService implements Service {
 	}
 
 	@Override
-	public void query() {
+	public String query(String name) {
 		System.out.println("打印权限");
-		target.query();
+		target.query(name);
+		return null;
 	}
 }

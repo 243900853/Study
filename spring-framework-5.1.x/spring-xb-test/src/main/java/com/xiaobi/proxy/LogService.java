@@ -9,8 +9,9 @@ public class LogService implements Service {
 	}
 
 	@Override
-	public void query() {
+	public String query(String name) {
 		System.out.println("打印日志");
-		target.query();
+		target.query(name);
+		return null;
 	}
 }
