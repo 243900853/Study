@@ -3,6 +3,8 @@ package com.xiaobi.test;
 import com.xiaobi.dao.UserDao;
 import com.xiaobi.mybatis.FamilyFactory;
 import com.xiaobi.proxy.*;
+import com.xiaobi.service.XB;
+import com.xiaobi.service.XBService;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,9 +32,13 @@ public class ProxyTest {
 		UserDao userDao = (UserDao) FamilyFactory.getMapper(UserDao.class);
 		List<String> list = userDao.queryUser("xiaobi");
 		System.out.println("=========================");
+
+		Service mapper;
+		mapper = (Service)FamilyFactory.getMapper(new IndexService());
+		mapper.query("5");
 		//模拟Proxy.newProxyInstance
-		Service proxy4 = (Service) DynamicProxy.getInsance(new IndexService());
-		proxy4.query("4");
+//		Service proxy4 = (Service) DynamicProxy.getInsance(new IndexService());
+//		proxy4.query("4");
 
 	}
 }

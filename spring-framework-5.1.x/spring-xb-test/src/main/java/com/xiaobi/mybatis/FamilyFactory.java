@@ -19,4 +19,9 @@ public class FamilyFactory {
 
 		return o;
 	}
+
+	public static Object getMapper(Object object){
+		Object o = DynamicProxy.getInsance(object,new FamilyInvocationHandler());
+		return o;
+	}
 }
