@@ -29,6 +29,8 @@ git push --set-upstream https://github.com/243900853/SpirngBoot.git master
 git pull
 --删除
 git rm 25946
+--下载单个文件
+git checkout -m Spring源码.docx
 
 --设置默认参数
 git remote add origin https://github.com/243900853/SpirngBoot.git
