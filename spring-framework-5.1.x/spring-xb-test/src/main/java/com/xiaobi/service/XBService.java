@@ -10,6 +10,7 @@ public class XBService implements XB{
 
 	@Autowired
 	FamilyService familyService;
+	public XBService(String name1,String name2,String name3){}
 
 	public XBService() {
 		System.out.println("print XBService");

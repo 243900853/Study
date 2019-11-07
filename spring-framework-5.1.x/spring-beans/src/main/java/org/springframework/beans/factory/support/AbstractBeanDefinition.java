@@ -59,36 +59,42 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		implements BeanDefinition, Cloneable {
 
 	/**
+	 * 等价于singleton
 	 * Constant for the default scope name: {@code ""}, equivalent to singleton
 	 * status unless overridden from a parent bean definition (if applicable).
 	 */
 	public static final String SCOPE_DEFAULT = "";
 
 	/**
+	 * 不自动装配
 	 * Constant that indicates no external autowiring at all.
 	 * @see #setAutowireMode
 	 */
 	public static final int AUTOWIRE_NO = AutowireCapableBeanFactory.AUTOWIRE_NO;
 
 	/**
+	 * byname
 	 * Constant that indicates autowiring bean properties by name.
 	 * @see #setAutowireMode
 	 */
 	public static final int AUTOWIRE_BY_NAME = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
 
 	/**
+	 * bytype
 	 * Constant that indicates autowiring bean properties by type.
 	 * @see #setAutowireMode
 	 */
 	public static final int AUTOWIRE_BY_TYPE = AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE;
 
 	/**
+	 * 构造方法
 	 * Constant that indicates autowiring a constructor.
 	 * @see #setAutowireMode
 	 */
 	public static final int AUTOWIRE_CONSTRUCTOR = AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
 
 	/**
+	 * 通过内省  自动选择自动装配模式
 	 * Constant that indicates determining an appropriate autowire strategy
 	 * through introspection of the bean class.
 	 * @see #setAutowireMode
@@ -99,12 +105,14 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	public static final int AUTOWIRE_AUTODETECT = AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT;
 
 	/**
+	 * 不检查依赖 常量
 	 * Constant that indicates no dependency check at all.
 	 * @see #setDependencyCheck
 	 */
 	public static final int DEPENDENCY_CHECK_NONE = 0;
 
 	/**
+	 * 依赖检查 常量
 	 * Constant that indicates dependency checking for object references.
 	 * @see #setDependencyCheck
 	 */
@@ -136,35 +144,35 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	public static final String INFER_METHOD = "(inferred)";
 
-
+	//BeanDefinition的class  可能不是最终bean的class
 	@Nullable
 	private volatile Object beanClass;
 
 	@Nullable
 	private String scope = SCOPE_DEFAULT;
-
+	//是否抽象
 	private boolean abstractFlag = false;
 
 	private boolean lazyInit = false;
 
 	private int autowireMode = AUTOWIRE_NO;
-
+	//默认不做依赖检查
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
-
+	//存储dependsOn 名字
 	@Nullable
 	private String[] dependsOn;
-
+	//是否作为自动装配候选   其实bean可以不参与自动装配的
 	private boolean autowireCandidate = true;
-
+	//是否主要候选bean
 	private boolean primary = false;
 
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
 
 	@Nullable
 	private Supplier<?> instanceSupplier;
-
+	//允许访问非公开方法、构造方法   放射
 	private boolean nonPublicAccessAllowed = true;
-
+	//调用构造方法采用宽松匹配
 	private boolean lenientConstructorResolution = true;
 
 	@Nullable

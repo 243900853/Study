@@ -204,7 +204,7 @@ public class DynamicProxy {
 		try {
 			String packageStr = DynamicProxy.class.getPackage().getName().replace(".","/");
 //			File file = new File("d:\\com\\$Proxy.java");
-			File file = new File("c:\\com\\xiaobi\\proxy\\$Proxy.java");
+			File file = new File("d:\\com\\xiaobi\\proxy\\$Proxy.java");
 //			File file = new File(System.getProperty("user.dir")+"/spring-xb-test/src/main/java/"+packageStr+"/$Proxy.java");
 			if (!file.exists()) {
 //				file.createNewFile();
@@ -227,8 +227,7 @@ public class DynamicProxy {
 			//执行编译
 			t.call();
 			fileMgr.close();
-
-			URL[] urls = new URL[]{new URL("file:c:\\\\")};
+			URL[] urls = new URL[]{new URL("file:d:\\\\")};
 //			URL[] urls = new URL[]{new URL("file:"+System.getProperty("user.dir")+"/spring-xb-test/src/main/java/")};
 			//用于加载时的路径，相当于将你指定的目录加载到了CLASSPATH中。
 			URLClassLoader urlClassLoader = new URLClassLoader(urls);

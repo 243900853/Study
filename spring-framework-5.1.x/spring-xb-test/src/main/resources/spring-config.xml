@@ -11,7 +11,11 @@
 		<!-- 构造器注入,构造器注入和Set注入不能在同时存在 -->
 <!--		<constructor-arg ref="xbBean"></constructor-arg>-->
 	</bean>
-	<bean id="xbService" class="com.xiaobi.service.XBService"></bean>
+	<bean id="xbService" class="com.xiaobi.service.XBService">
+		<constructor-arg value="ZL0" index="0"></constructor-arg>
+		<constructor-arg value="ZL1" index="1"></constructor-arg>
+		<constructor-arg value="ZL2" index="2"></constructor-arg>
+	</bean>
 
 <!--	<bean id="familyService" class="com.xiaobi.service.FamilyService"></bean>-->
 <!--	<bean id="xbService1" primary="true" class="com.xiaobi.service.XBService"></bean>-->
