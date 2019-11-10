@@ -63,7 +63,12 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+		//用来存放配置类的bd reader就是存放AnnotatedGenericBeanDefinition
+		//配置类是需要扫描包，但是配置类不在扫描出来的类当中，所以需要人工的提供配置类
+		//这里不直接用AnnotatedGenericBeanDefinition存放配置类，是因为Spring提供了一个方法，供扩展开发动态的添加配置和类
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		//Spring提供api用来动态扫描注解
+		//一般供扩展Spring的时候用到的
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 

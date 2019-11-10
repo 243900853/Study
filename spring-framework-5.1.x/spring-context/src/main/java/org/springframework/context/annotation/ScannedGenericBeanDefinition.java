@@ -64,12 +64,15 @@ public class ScannedGenericBeanDefinition extends GenericBeanDefinition implemen
 
 
 	@Override
+	//注解的原信息在开始的时候就初始化了，所以这里直接返回this.metadata
+	//类的注解信息存放AnnotationMetadata这里面
 	public final AnnotationMetadata getMetadata() {
 		return this.metadata;
 	}
 
 	@Override
 	@Nullable
+	//这个方法返回空的意思是，通过注解扫描出来的bd没有FactoryMethod，只有XML才有这个
 	public MethodMetadata getFactoryMethodMetadata() {
 		return null;
 	}

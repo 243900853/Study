@@ -141,6 +141,8 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * name.
 	 * <p>Currently, the method names detected during destroy method inference
 	 * are "close" and "shutdown", if present on the specific bean class.
+	 * 销毁方法回调策略，如果bd设置了这个beanDefinition.setDestroyMethodName(AbstractBeanDefinition.INFER_METHOD);
+	 * 则会自动调用close和shutdown方法
 	 */
 	public static final String INFER_METHOD = "(inferred)";
 

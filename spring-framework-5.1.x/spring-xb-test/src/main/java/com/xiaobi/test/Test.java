@@ -26,6 +26,8 @@ public class Test {
 //		ac.setAllowCircularReferences(false);
 		ac.register(Appconfig.class);
 //		ac.getBeanFactory().registerSingleton("indexBean", IndexBean.class);
+		//扫描包
+		ac.scan("com.xiaobi");
 
 		GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
 		genericBeanDefinition.setAutowireMode(2);
