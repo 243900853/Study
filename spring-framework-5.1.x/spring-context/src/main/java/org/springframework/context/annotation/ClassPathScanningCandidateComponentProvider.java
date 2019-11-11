@@ -416,8 +416,10 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	}
 
 	private Set<BeanDefinition> scanCandidateComponents(String basePackage) {
+		//记录扫描出来的BeanDefinition
 		Set<BeanDefinition> candidates = new LinkedHashSet<>();
 		try {
+			//Resource能解析的路径
 			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
 					resolveBasePackage(basePackage) + '/' + this.resourcePattern;
 			//获取到指定包下面的所有class文件
@@ -430,15 +432,16 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 				}
 				if (resource.isReadable()) {
 					try {
-						//解析所有Class文件，获取class所有元信息。比如注解信息、类的名字，类的父类等信息
+						//解析Class文件，获取class所有元信息。比如注解信息、类的名字，类的父类等信息
 						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
-						//判断是否有@Componetn注解
+						//判断当前文件是否有@Componetn注解
 						if (isCandidateComponent(metadataReader)) {
 							//将扫描出来的元信息放入到BeanDefinition里面
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							sbd.setResource(resource);
 							sbd.setSource(resource);
-							//
+							//深度判断BeanDefinition是否符合规则，在加入到BeanDefinition的集合中
+							//比如接口加了@Componetn是不会加入到candidates中
 							if (isCandidateComponent(sbd)) {
 								if (debugEnabled) {
 									logger.debug("Identified candidate component class: " + resource);
@@ -501,6 +504,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 			}
 		}
 		//includeFilters里面存放了1个@Componetn注解
+		//includeFilters数据在启动容器时，调用无参构造方法添加的
+		//ClassPathBeanDefinitionScanner.registerDefaultFilters 第166行
 		for (TypeFilter tf : this.includeFilters) {
 			if (tf.match(metadataReader, getMetadataReaderFactory())) {
 				return isConditionMatch(metadataReader);

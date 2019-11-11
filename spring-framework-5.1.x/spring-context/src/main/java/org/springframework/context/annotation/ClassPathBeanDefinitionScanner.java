@@ -161,8 +161,10 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 		this.registry = registry;
-
+		//useDefaultFilters Spring默认给true
 		if (useDefaultFilters) {
+			//容器启动第一时间将@Component注解放到includeFilters集合中
+			// 后面doScan方法需要用到这个集合做判断，将符合规则（@Component注解）的class文件放到bdMap集合中
 			registerDefaultFilters();
 		}
 		setEnvironment(environment);
@@ -273,7 +275,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<>();
 		for (String basePackage : basePackages) {
 			//关键代码，完成扫描
-			//找到加了@Component注解的class类
+			//扫描出所有class文件将符合规则（到加了@Component注解，接口没加@Component等）的class文件转换成BeanDefinition
+			//返回BeanDefinition集合
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
 			for (BeanDefinition candidate : candidates) {
 				ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(candidate);
