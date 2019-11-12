@@ -210,17 +210,24 @@ public class AnnotatedBeanDefinitionReader {
 	 * @param definitionCustomizers one or more callbacks for customizing the
 	 * factory's {@link BeanDefinition}, e.g. setting a lazy-init or primary flag
 	 * @since 5.0
+	 * doRegisterBean方法可以理解为
+	 * 		GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
+	 * 		genericBeanDefinition.setAutowireMode(2);
+	 * 		genericBeanDefinition.setBeanClass(XBService1.class);
+	 * 		genericBeanDefinition.setScope("singleton");
+	 * 		ac.registerBeanDefinition("xb1",genericBeanDefinition);
 	 */
 	<T> void doRegisterBean(Class<T> beanClass, @Nullable Supplier<T> instanceSupplier, @Nullable String name,
 			@Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
-
+		//配置类固定用AnnotatedGenericBeanDefinition来存放
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(beanClass);
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
 		}
-
+		//设置父类
 		abd.setInstanceSupplier(instanceSupplier);
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
+		//设置作用域
 		abd.setScope(scopeMetadata.getScopeName());
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
@@ -241,9 +248,11 @@ public class AnnotatedBeanDefinitionReader {
 		for (BeanDefinitionCustomizer customizer : definitionCustomizers) {
 			customizer.customize(abd);
 		}
-
+		//BeanDefinitionMap不存放bd的名字，所以这里将bean的名字和bd存放到BeanDefinitionHolder这个bd通用类中
+		// 方便注册bd可以同时获取BeanDefinition和beanName
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+		//注册bd，就是将bd放到BeanDefinitionMap集合中
 		BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 	}
 

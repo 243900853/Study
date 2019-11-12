@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
 /**
  * Utility class for creating a scoped proxy.
  *
- * <p>Used by ScopedProxyBeanDefinitionDecorator and ClassPathBeanDefinitionScanner.
+ * <p>Used by ScopedProxyBeanDefinitionDecorator and .
  *
  * @author Mark Fisher
  * @author Juergen Hoeller

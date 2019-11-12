@@ -59,16 +59,23 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 
 
 	/**
+	 * 调用默认构造方法，会执行父类的构造方法
+	 * public GenericApplicationContext() {
+	 * 		this.beanFactory = new DefaultListableBeanFactory();
+	 * }
+	 * 容器启动就会先实例化beanFactory
 	 * Create a new AnnotationConfigApplicationContext that needs to be populated
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
-		//用来存放配置类的bd reader就是存放AnnotatedGenericBeanDefinition
-		//配置类是需要扫描包，但是配置类不在扫描出来的类当中，所以需要人工的提供配置类
-		//这里不直接用AnnotatedGenericBeanDefinition存放配置类，是因为Spring提供了一个方法，供扩展开发动态的添加配置和类
+		//用来存放配置类的bd，AnnotatedGenericBeanDefinition这个就是专门存放配置类的bd，具体看register方法
+		//这里为什么不直接用AnnotatedGenericBeanDefinition去接收配置类bd？
+		//是因为Spring提供了AnnotatedBeanDefinitionReader这个类，供程序员扩展，动态的添加配置类
+		//这里会扫描出5个内置的后置处理器，放到this.beanFactory.BeanDefinitionMap中，供后面后置处理器逻辑处理提供数据源
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		//Spring提供api用来动态扫描注解
-		//一般供扩展Spring的时候用到的
+		//一般供扩展Spring的时候用到的供外部使用，Spring内部没有用过scanner这个对象
+		//容器启动第一时间将@Component注解放到includeFilters集合中，供后面判断符合规则的注解（可以自定义注解让Spring扫描）提供数据源
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
@@ -93,6 +100,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		this();
 		//注册配置类，因为配置需要解析，一般不需要自己扫描
 		//beanDefinitionMap.put("appconfig",componentClasses)
+		//为什么需要手动给配置类给Spring？因为配置类扫描包下面所有class文件的功能，不能把自己扫描出来，所以需要手动提供配置类给Spring
 		register(componentClasses);
 		refresh();
 	}

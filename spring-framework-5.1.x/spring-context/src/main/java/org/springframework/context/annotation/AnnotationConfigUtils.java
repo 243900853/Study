@@ -159,7 +159,8 @@ public abstract class AnnotationConfigUtils {
 		}
 
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
-
+		//注意ConfigurationClassPostProcessor这个后置处理器，他实现了BeanDefinitionRegistryPostProcessor
+		//BeanDefinitionRegistryPostProcessor.postProcessBeanDefinitionRegistry：Spring还没有完成扫描之前调用
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);

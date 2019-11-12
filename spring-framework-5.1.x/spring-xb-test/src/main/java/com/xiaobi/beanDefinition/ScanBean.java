@@ -1,4 +1,4 @@
 package com.xiaobi.beanDefinition;
-@Family
+@FamilyScanner
 public class ScanBean {
 }

@@ -11,4 +11,8 @@ public class IndexScanner extends ClassPathBeanDefinitionScanner {
 		super(registry);
 	}
 
+	@Override
+	public void addIncludeFilter(TypeFilter includeFilter) {
+		super.addIncludeFilter(includeFilter);
+	}
 }

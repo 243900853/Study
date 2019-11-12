@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 //切面
 @Component
 @Aspect
-public class FamilyAspect {
+class FamilyAspect {
 	//切点
 	@Pointcut("execution(* com.xiaobi.service..*(..))")
 	public void anyPublicMethod(){

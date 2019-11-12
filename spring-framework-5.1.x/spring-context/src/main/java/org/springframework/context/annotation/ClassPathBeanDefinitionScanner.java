@@ -164,7 +164,6 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		//useDefaultFilters Spring默认给true
 		if (useDefaultFilters) {
 			//容器启动第一时间将@Component注解放到includeFilters集合中
-			// 后面doScan方法需要用到这个集合做判断，将符合规则（@Component注解）的class文件放到bdMap集合中
 			registerDefaultFilters();
 		}
 		setEnvironment(environment);
@@ -251,7 +250,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	 */
 	public int scan(String... basePackages) {
 		int beanCountAtScanStart = this.registry.getBeanDefinitionCount();
-
+		//扫描包下面的所有class文件
 		doScan(basePackages);
 
 		// Register annotation config processors, if necessary.

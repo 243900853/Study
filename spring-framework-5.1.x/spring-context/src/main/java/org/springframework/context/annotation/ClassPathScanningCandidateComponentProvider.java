@@ -204,6 +204,9 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	 */
 	@SuppressWarnings("unchecked")
 	protected void registerDefaultFilters() {
+		//这里传了一个Component.class
+		//后续doScan方法，spring扫描resource之后需要通过includeFilters判断注解是否合理,
+		//将符合规则（@Component注解）的class文件放到bdMap集合中
 		this.includeFilters.add(new AnnotationTypeFilter(Component.class));
 		ClassLoader cl = ClassPathScanningCandidateComponentProvider.class.getClassLoader();
 		try {
