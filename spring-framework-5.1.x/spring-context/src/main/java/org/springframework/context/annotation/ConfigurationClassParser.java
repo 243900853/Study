@@ -574,10 +574,13 @@ class ConfigurationClassParser {
 						// Candidate class is an ImportBeanDefinitionRegistrar ->
 						// delegate to it to register additional bean definitions
 						Class<?> candidateClass = candidate.loadClass();
+						//处理ImportBeanDefinitionRegistrar扩展点，主要是实例化他
 						ImportBeanDefinitionRegistrar registrar =
 								BeanUtils.instantiateClass(candidateClass, ImportBeanDefinitionRegistrar.class);
+						//实例化ImportBeanDefinitionRegistrar之后，判断是否有AwareMethod
 						ParserStrategyUtils.invokeAwareMethods(
 								registrar, this.environment, this.resourceLoader, this.registry);
+						//这段非常重要 把实例化好的ImportBeanDefinitionRegistrar存放到importBeanDefinitionRegistrars里面
 						configClass.addImportBeanDefinitionRegistrar(registrar, currentSourceClass.getMetadata());
 					}
 					else {

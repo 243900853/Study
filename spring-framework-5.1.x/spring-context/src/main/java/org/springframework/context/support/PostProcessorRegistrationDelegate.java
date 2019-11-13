@@ -51,21 +51,27 @@ final class PostProcessorRegistrationDelegate {
 	private PostProcessorRegistrationDelegate() {
 	}
 
-
+	/**
+	 * List<BeanFactoryPostProcessor> beanFactoryPostProcessors
+	 * 1、没数据 90%
+	 * 2、有数据 10%
+	 * @param beanFactory
+	 * @param beanFactoryPostProcessors
+	 */
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
-		//存放所有后置处理器名称的集合
+		//存放所有继承BeanDefinitionRegistryPostProcessor类的名称
 		Set<String> processedBeans = new HashSet<>();
 
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			//以下代码主要是处理BeanDefinitionRegistryPostProcessor.postProcessBeanDefinitionRegistry方法
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
-			//所有后置处理器集合
+			//存放所有后置处理器集合
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
-			//扫描出所有后置处理器
+			//通过api提供后置处理器，才会执行下面的逻辑
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				//先处理内部的后置处理器
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {

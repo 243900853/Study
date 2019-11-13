@@ -519,6 +519,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Tell the subclass to refresh the internal bean factory.
 			//获取bean工厂，bean工厂里面存放BeanDefinitionMap
+			//检查beanFactory有没有初始化，没有初始化就会初始化
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -530,8 +531,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Invoke factory processors registered as beans in the context.
 				//完成扫描和解析
-				// 1、将所有扫描出来的BeanDefinition对象（单例、原型）放到BeanDefinitionMap这个Map集合中
-				// 2、将所有BeanDefinition对象的名字存放到beanDefinitionNames这个list集合中
+				// 1、通过后置处理器将所有扫描出来的BeanDefinition对象（单例、原型）放到BeanDefinitionMap这个Map集合中
+				// 2、通过后置处理器将所有BeanDefinition对象的名字存放到beanDefinitionNames这个list集合中
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
@@ -639,7 +640,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+		// GenericApplicationContext.beanFactory通过AnnotationConfigApplicationContext这个启动就有值
+		// GenericApplicationContext.beanFactory通过ClassPathXmlApplicationContext这个启动就没有值
+		//初始化GenericApplicationContext.beanFactory
 		refreshBeanFactory();
+		// 返回GenericApplicationContext.beanFactory
 		return getBeanFactory();
 	}
 
