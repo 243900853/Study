@@ -218,6 +218,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 */
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
+		//生成系统ID，为后置处理器给一个唯一的id
 		int registryId = System.identityHashCode(registry);
 		if (this.registriesPostProcessed.contains(registryId)) {
 			throw new IllegalStateException(
@@ -260,16 +261,21 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
+		//获取所有内置bd
 		String[] candidateNames = registry.getBeanDefinitionNames();
-
+		//这里扫描所有bd类，是为了给配置类添加已经被解析标志
 		for (String beanName : candidateNames) {
+			//根据名字得到bd  this.beanDefinitionMap.get(beanName);
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
+			//isFullConfigurationClass判断bd是不是全配置
+			//判断配置类是否被解析过（所谓的被解析就是往AttributeAccessorSupport.attributes添加数据）
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
 					ConfigurationClassUtils.isLiteConfigurationClass(beanDef)) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
 			}
+			//checkConfigurationClassCandidate往配置类bd添加已经被解析标志（full/lite）
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
 			}
@@ -312,6 +318,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
+			//解析类里面的注解
 			parser.parse(candidates);
 			parser.validate();
 

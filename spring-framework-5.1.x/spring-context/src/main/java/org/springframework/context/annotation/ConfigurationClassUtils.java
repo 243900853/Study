@@ -85,8 +85,13 @@ abstract class ConfigurationClassUtils {
 		if (className == null || beanDef.getFactoryMethodName() != null) {
 			return false;
 		}
-
+		//AnnotationMetadata存放类的元信息。比如：类的名字，类的原文件，类的类型，类的注解等这些叫类的元信息
 		AnnotationMetadata metadata;
+
+		//AnnotatedGenericBeanDefinition：配置类的bd类型
+		//ScannedGenericBeanDefinition：加了注解的类。@Component
+		//ScannedGenericBeanDefinition和AnnotatedGenericBeanDefinition他们都实现了 AnnotatedBeanDefinition
+		//className.equals(((AnnotatedBeanDefinition) beanDef).getMetadata().getClassName())判断是不是类部类
 		if (beanDef instanceof AnnotatedBeanDefinition &&
 				className.equals(((AnnotatedBeanDefinition) beanDef).getMetadata().getClassName())) {
 			// Can reuse the pre-parsed metadata from the given BeanDefinition...
@@ -111,11 +116,12 @@ abstract class ConfigurationClassUtils {
 				return false;
 			}
 		}
-
+		//为配置类添加已经被解析的标志full,含义看isFullConfigurationClass方法
 		if (isFullConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
 		else if (isLiteConfigurationCandidate(metadata)) {
+			//为配置类添加已经被解析的标志lite,含义看isFullConfigurationClass方法
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
 		else {
@@ -191,6 +197,11 @@ abstract class ConfigurationClassUtils {
 	 * class, through checking {@link #checkConfigurationClassCandidate}'s metadata marker.
 	 */
 	public static boolean isFullConfigurationClass(BeanDefinition beanDef) {
+		//AnnotatedGenericBeanDefinition-GenericBeanDefinition-AbstractBeanDefinition-BeanMetadataAttributeAccessor-AttributeAccessorSupport
+		//beanDef.getAttribute --> AttributeAccessorSupport.attributes.get(name)
+		//如果返回full代表配置类bd被解析并且类加了@Configuration注解
+		//如果返回lite代表配置类bd被解析，类没加@Configuration注解
+		//如果返回空代表配置类没有被解析
 		return CONFIGURATION_CLASS_FULL.equals(beanDef.getAttribute(CONFIGURATION_CLASS_ATTRIBUTE));
 	}
 
