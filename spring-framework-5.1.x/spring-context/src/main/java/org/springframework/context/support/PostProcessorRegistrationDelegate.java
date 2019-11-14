@@ -62,14 +62,16 @@ final class PostProcessorRegistrationDelegate {
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
-		//存放所有继承BeanDefinitionRegistryPostProcessor类的名称
+		//存放已执行的后置处理器名字，后面会通过这个集合过滤出未处理的后置处理器
 		Set<String> processedBeans = new HashSet<>();
 
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			//以下代码主要是处理BeanDefinitionRegistryPostProcessor.postProcessBeanDefinitionRegistry方法
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
+			//存放通过API提供的后置处理器类，该类继承的是BeanFactoryPostProcessor
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
-			//存放所有后置处理器集合
+			//存放所有BeanDefinitionRegistryPostProcessor的集合
+			//存放所有内置的BeanFactoryPostProcessor
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 			//通过api提供后置处理器，才会执行下面的逻辑
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
@@ -104,7 +106,7 @@ final class PostProcessorRegistrationDelegate {
 					//beanFactory.getBean--从三级缓存中拿，拿不到就会实例化当前后置处理器(循环依赖的时候需要用到getBean方法)
 					//getBean--doGetBean--createBean--doCreateBean
 					currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
-					//将当前后置处理器名称放到所有后置处理器名称集合中
+					//将当前已执行后置处理器名称放到所集合中
 					processedBeans.add(ppName);
 				}
 			}
@@ -152,6 +154,9 @@ final class PostProcessorRegistrationDelegate {
 					if (!processedBeans.contains(ppName)) {
 						currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
 						processedBeans.add(ppName);
+						//这里设置true的原因是需要在重新找一遍
+						//为什么要重新再找一遍
+						// 因为循环处理"无特点"的BeanDefinitionRegistryPostProcessor.postProcessBeanDefinitionRegistry方法
 						reiterate = true;
 					}
 				}
