@@ -161,6 +161,7 @@ public abstract class AnnotationConfigUtils {
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
 		//注意ConfigurationClassPostProcessor这个后置处理器，他实现了BeanDefinitionRegistryPostProcessor
 		//BeanDefinitionRegistryPostProcessor.postProcessBeanDefinitionRegistry：Spring还没有完成扫描之前调用
+		//registerPostProcessor这个方法比较重要，就是将BeanDefinition放到BeanDefinitionMap里面
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);
@@ -214,6 +215,7 @@ public abstract class AnnotationConfigUtils {
 			BeanDefinitionRegistry registry, RootBeanDefinition definition, String beanName) {
 
 		definition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+		//DefaultListableBeanFactory.registerBeanDefinition方法就是往DefaultListableBeanFactory.beanDefinitionMap.put(beanName, beanDefinition);
 		registry.registerBeanDefinition(beanName, definition);
 		return new BeanDefinitionHolder(definition, beanName);
 	}

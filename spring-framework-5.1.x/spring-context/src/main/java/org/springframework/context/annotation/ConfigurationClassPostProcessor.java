@@ -264,6 +264,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		//获取所有内置bd
 		String[] candidateNames = registry.getBeanDefinitionNames();
 		//这里扫描所有bd类，是为了给配置类添加已经被解析标志
+		//5个内置的bd+程序员手动put进去的bd（AppConfig），这里不包括扫描出来的bd
 		for (String beanName : candidateNames) {
 			//根据名字得到bd  this.beanDefinitionMap.get(beanName);
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);

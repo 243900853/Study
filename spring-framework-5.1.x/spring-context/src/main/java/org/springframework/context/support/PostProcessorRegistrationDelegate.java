@@ -156,7 +156,8 @@ final class PostProcessorRegistrationDelegate {
 						processedBeans.add(ppName);
 						//这里设置true的原因是需要在重新找一遍
 						//为什么要重新再找一遍
-						// 因为循环处理"无特点"的BeanDefinitionRegistryPostProcessor.postProcessBeanDefinitionRegistry方法
+						// 因为执行invokeBeanDefinitionRegistryPostProcessors方法过程中，方法可能注册新的后置处理器。
+						// 这里的作用就是要将所有的后置处理器都处理完
 						reiterate = true;
 					}
 				}
@@ -183,7 +184,7 @@ final class PostProcessorRegistrationDelegate {
 
 		// Do not initialize FactoryBeans here: We need to leave all regular beans
 		// uninitialized to let the bean factory post-processors apply to them!
-		//以下代码主要是处理BeanFactoryPostProcessor.postProcessBeanFactory方法
+		//以下代码主要是处理BeanFactoryPostProcessor.postProcessBeanFactory方法--这里是非API提供的后置处理器
 		//这里还是能找到ConfigurationClassPostProcessor
 		String[] postProcessorNames =
 				beanFactory.getBeanNamesForType(BeanFactoryPostProcessor.class, true, false);
