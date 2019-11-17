@@ -269,7 +269,11 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			//根据名字得到bd  this.beanDefinitionMap.get(beanName);
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 			//isFullConfigurationClass判断bd是不是全配置
+			//1、如果返回full代表配置类bd被解析并且类加了@Configuration注解
+			//2、如果返回lite代表配置类bd被解析，类没加@Configuration注解
+			//3、如果返回空代表配置类没有被解析
 			//判断配置类是否被解析过（所谓的被解析就是往AttributeAccessorSupport.attributes添加数据）
+			//数据的添加在checkConfigurationClassCandidate里面
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
 					ConfigurationClassUtils.isLiteConfigurationClass(beanDef)) {
 				if (logger.isDebugEnabled()) {

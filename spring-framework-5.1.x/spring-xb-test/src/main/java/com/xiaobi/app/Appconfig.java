@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 //@ComponentScan("com.xiaobi")
 //@ImportResource("classpath:spring-config.xml")
 @EnableAspectJAutoProxy
-@MapperScan
+//@MapperScan
 public class Appconfig {
 
 }

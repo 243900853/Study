@@ -73,7 +73,7 @@ final class PostProcessorRegistrationDelegate {
 			//存放所有BeanDefinitionRegistryPostProcessor的集合
 			//存放所有内置的BeanFactoryPostProcessor
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
-			//通过api提供后置处理器，才会执行下面的逻辑
+			//beanFactoryPostProcessors是通过api提供后置处理器，才会执行下面的逻辑
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				//先处理内部的后置处理器
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
@@ -174,6 +174,7 @@ final class PostProcessorRegistrationDelegate {
 			//现在循环处理"所有"的BeanDefinitionRegistryPostProcessor.BeanFactoryPostProcessor.postProcessBeanFactory方法
 			//将加了注解的类放到this.beanFactory.beanDefinitionMap中
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
+			//循环执行通过API提供的BeanFactoryPostProcessor.postProcessBeanFactory
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
 
