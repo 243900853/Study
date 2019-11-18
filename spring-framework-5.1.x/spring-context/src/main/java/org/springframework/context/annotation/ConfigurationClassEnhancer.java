@@ -75,6 +75,7 @@ class ConfigurationClassEnhancer {
 	// The callbacks to use. Note that these callbacks must be stateless.
 	private static final Callback[] CALLBACKS = new Callback[] {
 			new BeanMethodInterceptor(),
+			//提供多个逻辑方法
 			new BeanFactoryAwareMethodInterceptor(),
 			NoOp.INSTANCE
 	};
@@ -95,6 +96,7 @@ class ConfigurationClassEnhancer {
 	 * @return the enhanced subclass
 	 */
 	public Class<?> enhance(Class<?> configClass, @Nullable ClassLoader classLoader) {
+		//判断类有没有被代理过
 		if (EnhancedConfiguration.class.isAssignableFrom(configClass)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("Ignoring request to enhance %s as it has " +
@@ -106,6 +108,7 @@ class ConfigurationClassEnhancer {
 			}
 			return configClass;
 		}
+		//newEnhancer  CGLib产生代理对象
 		Class<?> enhancedClass = createClass(newEnhancer(configClass, classLoader));
 		if (logger.isTraceEnabled()) {
 			logger.trace(String.format("Successfully enhanced %s; enhanced class name is: %s",
@@ -119,9 +122,14 @@ class ConfigurationClassEnhancer {
 	 */
 	private Enhancer newEnhancer(Class<?> configSuperClass, @Nullable ClassLoader classLoader) {
 		Enhancer enhancer = new Enhancer();
+		//设置继承类
 		enhancer.setSuperclass(configSuperClass);
+		//为代理对象添加实现接口EnhancedConfiguration
+		//给类添加被代理过的标志  前面代码EnhancedConfiguration.class.isAssignableFrom(configClass)用到
 		enhancer.setInterfaces(new Class<?>[] {EnhancedConfiguration.class});
+		//设置要不要使用工厂
 		enhancer.setUseFactory(false);
+		//设置代理对象名字生成策略   名字生成规则
 		enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
 		enhancer.setStrategy(new BeanFactoryAwareGeneratorStrategy(classLoader));
 		enhancer.setCallbackFilter(CALLBACK_FILTER);
