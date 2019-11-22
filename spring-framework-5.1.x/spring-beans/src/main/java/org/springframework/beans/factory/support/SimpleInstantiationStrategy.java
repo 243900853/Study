@@ -84,6 +84,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					}
 				}
 			}
+			//instantiateClass实例化对象
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {

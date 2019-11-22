@@ -151,8 +151,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
 			if (!this.singletonObjects.containsKey(beanName)) {
+				//singletonFactory数据是通过lambda表达式getEarlyBeanReference来的
+				//添加到二级缓存中
 				this.singletonFactories.put(beanName, singletonFactory);
+				//从三级缓存中剔除
 				this.earlySingletonObjects.remove(beanName);
+				//bd有个集合存放bdName,bean同样有个集合存放beanName,这个就是存放beanName的集合
 				this.registeredSingletons.add(beanName);
 			}
 		}
@@ -234,6 +238,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
+					//singletonFactory.getObject()这段代码的实际意义是调用singletonFactory的Lambda表达式
+					//也就是执行getSingleton方法的createBean
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
 				}
@@ -350,6 +356,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @see #isSingletonCurrentlyInCreation
 	 */
 	protected void beforeSingletonCreation(String beanName) {
+		//this.singletonsCurrentlyInCreation.add(beanName)添加到集合中，标识bean正在创建过程中
 		if (!this.inCreationCheckExclusions.contains(beanName) && !this.singletonsCurrentlyInCreation.add(beanName)) {
 			throw new BeanCurrentlyInCreationException(beanName);
 		}
