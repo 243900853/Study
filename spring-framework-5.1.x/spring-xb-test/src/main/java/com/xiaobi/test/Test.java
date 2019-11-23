@@ -28,7 +28,6 @@ public class Test {
 //		ac.getBeanFactory().registerSingleton("indexBean", IndexBean.class);
 		//扫描包
 		ac.scan("com.xiaobi");
-		
 
 		GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
 		genericBeanDefinition.setAutowireMode(2);
