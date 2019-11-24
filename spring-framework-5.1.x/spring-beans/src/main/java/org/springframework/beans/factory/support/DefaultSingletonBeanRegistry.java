@@ -154,7 +154,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				//singletonFactory数据是通过lambda表达式getEarlyBeanReference来的
 				//添加到二级缓存中
 				this.singletonFactories.put(beanName, singletonFactory);
-				//从三级缓存中剔除
+				//从三级缓存中剔除  因为有可能人为的修改了bd，此时要用最新的，但是
 				this.earlySingletonObjects.remove(beanName);
 				//bd有个集合存放bdName,bean同样有个集合存放beanName,这个就是存放beanName的集合
 				this.registeredSingletons.add(beanName);
