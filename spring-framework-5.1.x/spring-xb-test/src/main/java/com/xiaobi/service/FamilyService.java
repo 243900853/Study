@@ -15,7 +15,7 @@ public class FamilyService implements InitializingBean {
 	}
 
 	public FamilyService(XBService xbService){
-		System.out.println(xbService);
+		System.out.println("FamilyService(XBService xbService)"+xbService);
 	}
 
 	//注解Bean生命周期回调

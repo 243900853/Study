@@ -8,6 +8,6 @@ public class UserService {
 	@Autowired
 	IndexService indexService;
 	public UserService(){
-		System.out.println(indexService);
+		System.out.println("UserService无参构造方法"+indexService);
 	}
 }

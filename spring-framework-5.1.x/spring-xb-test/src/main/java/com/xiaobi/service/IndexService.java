@@ -9,6 +9,6 @@ public class IndexService {
 	UserService userService;
 
 	public IndexService(){
-		System.out.println(userService);
+		System.out.println("IndexService无参构造方法"+userService);
 	}
 }
