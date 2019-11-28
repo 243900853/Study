@@ -240,7 +240,8 @@ class ConfigurationClassParser {
 		// Recursively process the configuration class and its superclass hierarchy.
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
-			//doProcessConfigurationClass关键代码
+			//doProcessConfigurationClass
+			// 处理@Import @PropertySource @ComponentScan @ImportResource等注解
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);

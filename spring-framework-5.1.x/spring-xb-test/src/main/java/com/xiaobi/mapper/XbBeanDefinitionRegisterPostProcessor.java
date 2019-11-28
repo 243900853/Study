@@ -8,7 +8,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 public class XbBeanDefinitionRegisterPostProcessor implements BeanDefinitionRegistryPostProcessor {
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-
+		
 	}
 
 	@Override

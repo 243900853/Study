@@ -12,6 +12,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 public class ProcessTest {
 	public static void main(String[] args) {
+		//自定义注解让后置处理器扫描出来
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext();
 		ac.register(Appconfig.class);
 		ac.scan("com.xiaobi.beanDefinition");

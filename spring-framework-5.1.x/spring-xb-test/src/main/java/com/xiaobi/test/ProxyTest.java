@@ -30,7 +30,7 @@ public class ProxyTest {
 		proxy3.query("3");
 		System.out.println("=========================");
 
-		//模拟mybatis动态代理执行Sql
+		//模拟mybatis动态代理执行Sql   JDK动态代理
 		UserDao userDao = (UserDao) FamilyFactory.getMapper(UserDao.class);
 		List<String> list = userDao.queryUser("xiaobi");
 		System.out.println("=========================");

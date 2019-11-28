@@ -8,7 +8,7 @@ import java.lang.reflect.Proxy;
 
 public class FamilyFactory {
 	/*
-	实现动态代理
+	  JDK动态代理
 	  ClassLoader loader,将java文件编译成class文件
 	  Class<?>[] interfaces,接口对象，可以理解为要实现这个接口的类
 	  InvocationHandler h,重写接口方法，执行逻辑
