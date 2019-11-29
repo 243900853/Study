@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 
 //@ComponentScan("com.xiaobi")
 //@ImportResource("classpath:spring-config.xml")
+//@EnableAspectJAutoProxy(proxyTargetClass = true) proxyTargetClass = true强制使用CGLib代理
 @EnableAspectJAutoProxy
+@Configuration
 @Import(FamilyAopBeanPostProcessor.class)
 //@MapperScan
 public class Appconfig {

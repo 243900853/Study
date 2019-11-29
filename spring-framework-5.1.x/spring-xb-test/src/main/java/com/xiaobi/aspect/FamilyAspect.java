@@ -10,13 +10,20 @@ import org.springframework.stereotype.Component;
 @Aspect
 class FamilyAspect {
 	//切点
-	@Pointcut("execution(* com.xiaobi.service..*(..))")
-	public void anyPublicMethod(){
+	@Pointcut("execution(* com.xiaobi.service..*(..))")//service包下面的所有方法，所有参数
+	public void anyPublicMethod(){}
 
-	}
+	@Pointcut("args(java.lang.String)")//只有一个参数是String类型
+	public void pointCutArgs(){}
 
-	@Before("anyPublicMethod()")
+	@Pointcut("within(com.xiaobi.service.IndexService)")//只作用到IndexService类
+	public void pointCutWithin(){}
+
+	@Pointcut("this(com.xiaobi.service.XBService1)")//继承XBService1的代理类
+	public void pointCutThis(){}
+
+	@Before("pointCutThis()&&pointCutArgs()")
 	public void doAccessCheck(){
-		System.out.println("AOP：指定包下面，在所有方法执行前调用这个方法");
+		System.out.println("----------------在方法调用之前AOP拦截----------------");
 	}
 }
