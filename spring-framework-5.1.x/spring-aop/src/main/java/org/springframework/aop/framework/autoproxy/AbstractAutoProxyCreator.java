@@ -242,12 +242,17 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 	@Override
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
+		//得到类名,如果是FactoryBean,则返回&类名
 		Object cacheKey = getCacheKey(beanClass, beanName);
 
 		if (!StringUtils.hasLength(beanName) || !this.targetSourcedBeans.contains(beanName)) {
+			//advisedBeans是存放不需要被代理的bean（不能被代理的对象和已经被代理的对象）
+			// 比如加了@Aspect的类,因为他就是要做AOP逻辑处理
+			// 开始做代理的时候,会判断存不存在advisedBeans这里面，如果不存在则开始做代理操作
 			if (this.advisedBeans.containsKey(cacheKey)) {
 				return null;
 			}
+			//isInfrastructureClass判断不能被代理的类
 			if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) {
 				this.advisedBeans.put(cacheKey, Boolean.FALSE);
 				return null;
@@ -347,6 +352,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
+			//createProxy 创建代理对象
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
 			this.proxyTypes.put(cacheKey, proxy.getClass());
@@ -370,6 +376,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @see #shouldSkip
 	 */
 	protected boolean isInfrastructureClass(Class<?> beanClass) {
+		//通知不能被代理,切面不能被代理，顾问不能被代理，AopInfrastructureBean这个特殊bean不需要被代理
+		//AnnotationAwareAspectJAutoProxyCreator.isInfrastructureClass判断有没有加Aspect注解
 		boolean retVal = Advice.class.isAssignableFrom(beanClass) ||
 				Pointcut.class.isAssignableFrom(beanClass) ||
 				Advisor.class.isAssignableFrom(beanClass) ||
@@ -467,7 +475,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (advisorsPreFiltered()) {
 			proxyFactory.setPreFiltered(true);
 		}
-
+		//getProxy得到代理对象  判断是JDK动态代理还是CGLib动态代理
 		return proxyFactory.getProxy(getProxyClassLoader());
 	}
 

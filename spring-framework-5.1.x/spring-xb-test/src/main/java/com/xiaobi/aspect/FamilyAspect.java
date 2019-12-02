@@ -22,6 +22,9 @@ class FamilyAspect {
 	@Pointcut("this(com.xiaobi.service.XBService1)")//继承XBService1的代理类
 	public void pointCutThis(){}
 
+	@Pointcut("@within(com.xiaobi.beanDefinition.FamilyScanner)")//拦截FamilyScanner自定义注解的类
+	public void pointCutAnnoWithin(){}
+
 	@Before("pointCutThis()&&pointCutArgs()")
 	public void doAccessCheck(){
 		System.out.println("----------------在方法调用之前AOP拦截----------------");

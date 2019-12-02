@@ -2,6 +2,8 @@ package com.xiaobi.test;
 
 import com.xiaobi.app.Appconfig;
 import com.xiaobi.service.IndexService;
+import com.xiaobi.service.XB;
+import com.xiaobi.service.XBService;
 import com.xiaobi.service.XBService1;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -16,5 +18,8 @@ public class AopTest {
 		System.out.println(ac.getBean(IndexService.class));
 		ac.getBean(IndexService.class).aopStr("IndexService");
 		ac.getBean(IndexService.class).aopStr("IndexService",1);
+
+		XB bean = ac.getBean(XBService.class);
+		System.out.println(bean);
 	}
 }

@@ -505,7 +505,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
 			//第一次调用后置处理器，和aop有关
-			// 正常情况（90%情况下）只会做判断，仅仅只是做aop的属性设置，并不会实例化bean，所以返回bean为空
+			// 正常情况（90%情况下）只会做判断，仅仅只是做aop的属性设置（Aop属性注入），并不会实例化bean，所以返回bean为空
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -600,6 +600,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 			//第四次调用后置处理器，判断是否需要aop
 			//这个方法就是将Bean工厂放到singletonFactories二级缓存中
+			//循环依赖提前AOP代理对象创建这里完成getEarlyBeanReference
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
@@ -608,11 +609,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			//spring生命周期的开始，属性注入
 			//填充属性，也就是常说的自动注入
-			//循环依赖这里完成
+			//循环依赖这里完成，循环依赖的代理也在这里完成
 			//里面会完成第五次和第六次后置处理器的调用
 			populateBean(beanName, mbd, instanceWrapper);
 			//初始化Spring
 			//里面进行第七次和第八次后置处理器的调用
+			//里面完成Aop代理，但是如果是循环依赖，则在populateBean就提前完成代理，这一步就不会完成循环依赖的代理对象创建
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
@@ -1112,8 +1114,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	@Nullable
 	protected Object resolveBeforeInstantiation(String beanName, RootBeanDefinition mbd) {
 		Object bean = null;
+		//第一次进入beforeInstantiationResolved为空，因为还没有对beforeInstantiationResolved进行赋值
+		//beforeInstantiationResolved处理器是否开始工作
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
+			//isSynthetic判断是不是合成类
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 				Class<?> targetType = determineTargetType(beanName, mbd);
 				if (targetType != null) {
@@ -1141,6 +1146,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	@Nullable
 	protected Object applyBeanPostProcessorsBeforeInstantiation(Class<?> beanClass, String beanName) {
+		//只有AbstractAutoProxyCreator.postProcessBeforeInstantiation有作用
 		for (BeanPostProcessor bp : getBeanPostProcessors()) {
 			if (bp instanceof InstantiationAwareBeanPostProcessor) {
 				InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
@@ -1822,6 +1828,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
 			//applyBeanPostProcessorsAfterInitialization对bean做初始化干预
+			//真正的代理创建在AbstractAutoProxyCreator.postProcessAfterInitialization.wrapIfNecessary里面完成
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 
