@@ -506,6 +506,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
 			//第一次调用后置处理器，和aop有关
 			// 正常情况（90%情况下）只会做判断，仅仅只是做aop的属性设置（Aop属性注入），并不会实例化bean，所以返回bean为空
+			//判断将要实例化的bean将来要不要做代理，如果是切面类，则将来不需要被代理，这是他最主要的意义
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -1119,9 +1120,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
 			//isSynthetic判断是不是合成类
+			//hasInstantiationAwareBeanPostProcessors判断当前系统中有没有InstantiationAwareBeanPostProcessors这个后置处理器
+			//hasInstantiationAwareBeanPostProcessors在refresh().registerBeanPostProcessors方法中标识
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 				Class<?> targetType = determineTargetType(beanName, mbd);
 				if (targetType != null) {
+					//判断需不需要被代理，如果被代理了则不需要被代理，如果没有被代理则需要被代理
+					//bean一般返回空
 					bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
 					if (bean != null) {
 						bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
@@ -1813,12 +1818,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
 			//执行Spring当中的内置处理器
-			//生命周期回调----解析@PostConstruct
+			//生命周期初始化回调----解析@PostConstruct
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
 		try {
-			//生命周期回调--处理实现InitializingBean接口的类
+			//生命周期初始化回调--处理实现InitializingBean接口的类
+			//生命周期初始化回调--处理xml配置init-method="liftAfterInit"
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
 		catch (Throwable ex) {
@@ -1828,7 +1834,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
 			//applyBeanPostProcessorsAfterInitialization对bean做初始化干预
-			//真正的代理创建在AbstractAutoProxyCreator.postProcessAfterInitialization.wrapIfNecessary里面完成
+			//真正的代理对象创建在这里面完成
+			//真正的方法在AbstractAutoProxyCreator.postProcessAfterInitialization.wrapIfNecessary这里面
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 

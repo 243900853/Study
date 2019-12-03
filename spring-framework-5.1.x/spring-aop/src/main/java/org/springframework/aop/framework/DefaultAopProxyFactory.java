@@ -48,7 +48,11 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 
 	@Override
 	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
-		//isOptimize  是否开启优化策略
+		//isOptimize  是否开启优化策略，不过程序员一般不会这样去配置
+//		<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+//			<property name="optimize" value="true"></property>
+//		</bean>
+		//config.isProxyTargetClass() --> @EnableAspectJAutoProxy(proxyTargetClass = true) 强制使用CGLib
 		if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
 			Class<?> targetClass = config.getTargetClass();
 			if (targetClass == null) {

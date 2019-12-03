@@ -246,7 +246,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		Object cacheKey = getCacheKey(beanClass, beanName);
 
 		if (!StringUtils.hasLength(beanName) || !this.targetSourcedBeans.contains(beanName)) {
-			//advisedBeans是存放不需要被代理的bean（不能被代理的对象和已经被代理的对象）
+			//advisedBeans存放不需要被代理的bean（不能被代理的对象和已经被代理的对象）
 			// 比如加了@Aspect的类,因为他就是要做AOP逻辑处理
 			// 开始做代理的时候,会判断存不存在advisedBeans这里面，如果不存在则开始做代理操作
 			if (this.advisedBeans.containsKey(cacheKey)) {
@@ -340,6 +340,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (StringUtils.hasLength(beanName) && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
+		//advisedBeans前面createBean.resolveBeforeInstantiation有说道,存放不需要被代理对象集合
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
@@ -350,9 +351,11 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 		// Create proxy if we have advice.
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
+		//开始做代理
 		if (specificInterceptors != DO_NOT_PROXY) {
+			//标识后面不需要做代理
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
-			//createProxy 创建代理对象
+			//createProxy 创建代理对象在这里正式开始
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
 			this.proxyTypes.put(cacheKey, proxy.getClass());
@@ -455,6 +458,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		ProxyFactory proxyFactory = new ProxyFactory();
+		//复制需要代理对象的信息到工厂里面
 		proxyFactory.copyFrom(this);
 
 		if (!proxyFactory.isProxyTargetClass()) {
@@ -465,7 +469,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 				evaluateProxyInterfaces(beanClass, proxyFactory);
 			}
 		}
-
+		//获取通知集合，切点里面的通知
 		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
 		proxyFactory.addAdvisors(advisors);
 		proxyFactory.setTargetSource(targetSource);
