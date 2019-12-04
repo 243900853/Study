@@ -506,7 +506,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
 			//第一次调用后置处理器，和aop有关
 			// 正常情况（90%情况下）只会做判断，仅仅只是做aop的属性设置（Aop属性注入），并不会实例化bean，所以返回bean为空
-			//判断将要实例化的bean将来要不要做代理，如果是切面类，则将来不需要被代理，这是他最主要的意义
+			// 判断将要实例化的bean将来要不要做代理（如果是切面类，则将来不需要被代理）
+			// 保存不能被代理对象到advisedBeans，这是他最主要的意义
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -564,7 +565,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			//返回实例化对象的包裹类BeanWrapper
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
-		//可以通过instanceWrapper.getWrappedInstance()去包裹类去获取创建出来的对象
+		//可以通过instanceWrapper.getWrappedInstance()去包裹类获取创建出来的对象
 		//此时还只是一个对象不是bean
 		final Object bean = instanceWrapper.getWrappedInstance();
 		Class<?> beanType = instanceWrapper.getWrappedClass();
@@ -1178,6 +1179,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
 		// Make sure bean class is actually resolved at this point.
+		//从bd里面获取bean的路径并解析成class类
 		Class<?> beanClass = resolveBeanClass(mbd, beanName);
 
 		if (beanClass != null && !Modifier.isPublic(beanClass.getModifiers()) && !mbd.isNonPublicAccessAllowed()) {
@@ -1189,16 +1191,25 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (instanceSupplier != null) {
 			return obtainFromSupplier(instanceSupplier, beanName);
 		}
-
+		// Spring通过@Bean去创建Spring Bean的情况
+		// Spring第一步：扫描@ComponentScan("com.xiaobi")
+		// Spring第二步：扫描加了@Bean的方法，将返回的对象转换成bd，并将方法存放到factoryMethodName里面
+		// 当再次使用返回对象的时候，通过bd的factoryMethodName去获取到方法的返回对象
+		// 被扫描出来的正常bd在这里为空 mbd.getFactoryMethodName() == null
 		if (mbd.getFactoryMethodName() != null) {
 			return instantiateUsingFactoryMethod(beanName, mbd, args);
 		}
 
 		// Shortcut when re-creating the same bean...
+		//创建对象的构造方法没有被解析过
 		boolean resolved = false;
+		//要不要自动注入构造方法的参数
 		boolean autowireNecessary = false;
 		if (args == null) {
 			synchronized (mbd.constructorArgumentLock) {
+				//表示已经找到创建对象的方式 ConstructorOrFactoryMethod
+				//原型的时候resolvedConstructorOrFactoryMethod不为空
+				//因为原型会多次创建Bean，单例只会创建一次Bean
 				if (mbd.resolvedConstructorOrFactoryMethod != null) {
 					resolved = true;
 					autowireNecessary = mbd.constructorArgumentsResolved;
