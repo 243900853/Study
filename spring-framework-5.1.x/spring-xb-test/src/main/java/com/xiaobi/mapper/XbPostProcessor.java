@@ -21,5 +21,8 @@ public class XbPostProcessor implements BeanFactoryPostProcessor {
 
 		BeanDefinition beanDefinition = beanFactory.getBeanDefinition("familyService");
 		beanDefinition.setDestroyMethodName(AbstractBeanDefinition.INFER_METHOD);
+
+		GenericBeanDefinition orderService = (GenericBeanDefinition)beanFactory.getBeanDefinition("orderService");
+		orderService.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR);
 	}
 }

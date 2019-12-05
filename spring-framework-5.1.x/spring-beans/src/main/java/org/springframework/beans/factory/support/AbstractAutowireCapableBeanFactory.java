@@ -1208,7 +1208,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (args == null) {
 			synchronized (mbd.constructorArgumentLock) {
 				//表示已经找到创建对象的方式 ConstructorOrFactoryMethod
-				//原型的时候resolvedConstructorOrFactoryMethod不为空
+				//第二次getBean原型对象以后resolvedConstructorOrFactoryMethod不为空
 				//因为原型会多次创建Bean，单例只会创建一次Bean
 				if (mbd.resolvedConstructorOrFactoryMethod != null) {
 					resolved = true;
@@ -1227,6 +1227,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Candidate constructors for autowiring?
 		//determineConstructorsFromBeanPostProcessors第二次调用后置处理器--推断构造方法（找出有质疑的构造方法）
+		//ctors只有2种情况，空或1
+		//手动装配：
+		//如果找到1个无参构造方法，返回空，因为后面会自动调用无参构造方法去实例化对象
+		//如果找到1个有参构造方法，则不为空，因为他没有其他构造方法，只能用这个构造方法去实例化对象
+		//如果找到多个构造方法、1个无参构造方法，也返回空，因为Spring不知道要用那个构造方法去实例化对象
+		//如果找到多个构造方法、0个无参构造方法，报错
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
@@ -1241,7 +1247,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// No special handling: simply use no-arg constructor.
-		//实例化对象
+		//通过无参构造方法实例化对象
 		return instantiateBean(beanName, mbd);
 	}
 
@@ -1314,6 +1320,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {
 					SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;
+					//AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors 推断构造方法
 					Constructor<?>[] ctors = ibp.determineCandidateConstructors(beanClass, beanName);
 					if (ctors != null) {
 						return ctors;
@@ -1340,7 +1347,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 						getAccessControlContext());
 			}
 			else {
-				//instantiate实例化对象
+				//instantiate实例化对象  调用无参构造方法
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);
 			}
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
