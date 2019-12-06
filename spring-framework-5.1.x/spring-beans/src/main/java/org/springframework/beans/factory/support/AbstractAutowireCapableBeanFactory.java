@@ -60,6 +60,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.beans.factory.UnsatisfiedDependencyException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -1226,17 +1227,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Candidate constructors for autowiring?
-		//determineConstructorsFromBeanPostProcessors第二次调用后置处理器--推断构造方法（找出有质疑的构造方法）
-		//ctors只有2种情况，空或1
-		//手动装配：
-		//如果找到1个无参构造方法，返回空，因为后面会自动调用无参构造方法去实例化对象
-		//如果找到1个有参构造方法，则不为空，因为他没有其他构造方法，只能用这个构造方法去实例化对象
-		//如果找到多个构造方法、1个无参构造方法，也返回空，因为Spring不知道要用那个构造方法去实例化对象
-		//如果找到多个构造方法、0个无参构造方法，报错
+		//determineConstructorsFromBeanPostProcessors第二次调用后置处理器--第一次推断构造方法--找出有质疑的构造方法
+		//ctors有3种情况，空、1、多个
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
-			//找到合理的构造方法
+			//第二次推断构造方法--找到合理的构造方法
 			return autowireConstructor(beanName, mbd, ctors, args);
 		}
 

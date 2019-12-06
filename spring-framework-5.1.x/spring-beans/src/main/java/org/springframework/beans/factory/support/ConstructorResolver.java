@@ -120,16 +120,22 @@ class ConstructorResolver {
 		BeanWrapperImpl bw = new BeanWrapperImpl();
 		this.beanFactory.initBeanWrapper(bw);
 
+		//最后被确定出来使用的构造方法
+		//确定要使用的构造方法，找到唯一一个构造方法去实例化对象
 		Constructor<?> constructorToUse = null;
+		//存构造方法参数值   最后使用的参数
 		ArgumentsHolder argsHolderToUse = null;
+		//最终确定的参数
 		Object[] argsToUse = null;
 
 		if (explicitArgs != null) {
 			argsToUse = explicitArgs;
 		}
 		else {
+			//从bd里面拿到的参数列表
 			Object[] argsToResolve = null;
 			synchronized (mbd.constructorArgumentLock) {
+				//resolvedConstructorOrFactoryMethod：bd没有有解析过构造方法
 				constructorToUse = (Constructor<?>) mbd.resolvedConstructorOrFactoryMethod;
 				if (constructorToUse != null && mbd.constructorArgumentsResolved) {
 					// Found a cached constructor...
@@ -140,16 +146,22 @@ class ConstructorResolver {
 				}
 			}
 			if (argsToResolve != null) {
+				//解析拿到的参数值  因为值可能是对象，此时需要将拿到的参数值做转换
+				//<property name="XBService" ref="xbBean"></property>
 				argsToUse = resolvePreparedArguments(beanName, mbd, bw, constructorToUse, argsToResolve, true);
 			}
 		}
 
 		if (constructorToUse == null || argsToUse == null) {
 			// Take specified constructors, if any.
+			//chosenCtors：第一次推断构造方法返回的集合
+			//在这里进行第二次推断构造方法
 			Constructor<?>[] candidates = chosenCtors;
 			if (candidates == null) {
 				Class<?> beanClass = mbd.getBeanClass();
 				try {
+					//beanClass.getDeclaredConstructors():获取私有的构造方法
+					//beanClass.getConstructors():获取公共的构造方法
 					candidates = (mbd.isNonPublicAccessAllowed() ?
 							beanClass.getDeclaredConstructors() : beanClass.getConstructors());
 				}
@@ -160,26 +172,40 @@ class ConstructorResolver {
 				}
 			}
 
+			//处理无参构造方法
+			//candidates.length == 1 只有1个构造方法
+			//explicitArgs == null 程序员没有指定参数
+			// 1、<constructor-arg ref="OrderService"></constructor-arg>
+			// 2、genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.OrderService");
+			// !mbd.hasConstructorArgumentValues() bd没有构造方法参数值
 			if (candidates.length == 1 && explicitArgs == null && !mbd.hasConstructorArgumentValues()) {
 				Constructor<?> uniqueCandidate = candidates[0];
 				if (uniqueCandidate.getParameterCount() == 0) {
 					synchronized (mbd.constructorArgumentLock) {
+						//标识构造方法被解析过
 						mbd.resolvedConstructorOrFactoryMethod = uniqueCandidate;
+						//标识参数被解析过
 						mbd.constructorArgumentsResolved = true;
 						mbd.resolvedConstructorArguments = EMPTY_ARGS;
 					}
+					//instantiate：调用默认无参构造方法
 					bw.setBeanInstance(instantiate(beanName, mbd, uniqueCandidate, EMPTY_ARGS));
 					return bw;
 				}
 			}
 
 			// Need to resolve the constructor.
+			//构造方法自动装配或者加了@Autowired合理的构造方法（多个@Autowired注解，不存在required为true的构造方法）
 			boolean autowiring = (chosenCtors != null ||
 					mbd.getResolvedAutowireMode() == AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR);
+			//解析出来的参数
 			ConstructorArgumentValues resolvedValues = null;
-
+			//表示在实例化Spring的时候，找到当前构造方法的参数个数
+			//最小有效参数的个数，用来筛选出构造方法参数小于这个数的构造方法
 			int minNrOfArgs;
+			//explicitArgs程序员指定的参数
 			if (explicitArgs != null) {
+				//explicitArgs.length指定构造方法参数个数
 				minNrOfArgs = explicitArgs.length;
 			}
 			else {
@@ -187,7 +213,8 @@ class ConstructorResolver {
 				resolvedValues = new ConstructorArgumentValues();
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
 			}
-
+			//排序构造方法规则
+			//1、方法修饰符 public private protected default  2、参数个数多到少  3、参数精准度（指定类/接口/Object）
 			AutowireUtils.sortConstructors(candidates);
 			int minTypeDiffWeight = Integer.MAX_VALUE;
 			Set<Constructor<?>> ambiguousConstructors = null;

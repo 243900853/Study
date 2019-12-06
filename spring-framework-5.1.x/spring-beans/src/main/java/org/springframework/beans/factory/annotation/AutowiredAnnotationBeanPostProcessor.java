@@ -336,6 +336,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 							// 所以通过@Autowired(required = false)里面的required来判断，当前构造方法是否是必要构造方法
 							boolean required = determineRequiredStatus(ann);
 							if (required) {
+								//!candidates.isEmpty()为true的情况：多个@Autowired注解，存在required为true的构造方法
 								if (!candidates.isEmpty()) {
 									throw new BeanCreationException(beanName,
 											"Invalid autowire-marked constructors: " + candidates +

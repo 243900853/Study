@@ -17,5 +17,9 @@ public class OrderService {
 	public OrderService(UserService userService,IndexService indexService) {
 		System.out.println("2个构造方法");
 	}
+	@Autowired
+	public OrderService(Class clazz) {
+		System.out.println("程序员有指定参数"+clazz.getSimpleName());
+	}
 
 }
