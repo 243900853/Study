@@ -23,6 +23,7 @@ public class XbPostProcessor implements BeanFactoryPostProcessor {
 		beanDefinition.setDestroyMethodName(AbstractBeanDefinition.INFER_METHOD);
 
 		GenericBeanDefinition orderService = (GenericBeanDefinition)beanFactory.getBeanDefinition("orderService");
+		//orderService.setLenientConstructorResolution(false); //关闭宽松匹配
 		orderService.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR);
 	}
 }

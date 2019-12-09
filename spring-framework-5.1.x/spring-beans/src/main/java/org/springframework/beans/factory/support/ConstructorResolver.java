@@ -189,6 +189,7 @@ class ConstructorResolver {
 						mbd.resolvedConstructorArguments = EMPTY_ARGS;
 					}
 					//instantiate：调用默认无参构造方法
+					// 此时uniqueCandidate就是无参构造方法，所以直接通过ctor.newInstance,就可以执行方法
 					bw.setBeanInstance(instantiate(beanName, mbd, uniqueCandidate, EMPTY_ARGS));
 					return bw;
 				}
@@ -254,6 +255,7 @@ class ConstructorResolver {
 						//createArgumentArray:将构造方法传入的参数创建成对象
 						//比如传入的OrderService这个参数对象他还没有创建，此时就需要创建对象
 						//并返回构造方法传入参数对象集合
+						//根据参数名字或者类型去找到Bean,如果Bean没有就会实例化Bean,并返回给argsHolder,作为将来要使用的参数值
 						argsHolder = createArgumentArray(beanName, mbd, resolvedValues, bw, paramTypes, paramNames,
 								getUserDeclaredConstructor(candidate), autowiring, candidates.length == 1);
 					}
@@ -315,7 +317,12 @@ class ConstructorResolver {
 						"Could not resolve matching constructor " +
 						"(hint: specify index/type/name arguments for simple parameters to avoid type ambiguities)");
 			}
-			//mbd.isLenientConstructorResolution()是否采用宽松匹配，默认为true，如果类只存在多个模糊不清的构造方法，则使用排序靠前的构造方法
+			//mbd.isLenientConstructorResolution()是否采用宽松匹配，默认为true
+			//GenericBeanDefinition.setLenientConstructorResolution(false);
+			//类只存在多个模糊不清的构造方法,如果为true,则使用排序靠前的构造方法,否则报错
+			//为什么默认使用靠前的构造方法？
+			//因为后面instantiate方法用的是这个constructorToUse这个构造方法,
+			//而这个构造方法在第一次"比较当前构造方法分数和存放最合适的构造方法分数"的时候就保存起来了
 			else if (ambiguousConstructors != null && !mbd.isLenientConstructorResolution()) {
 				throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 						"Ambiguous constructor matches found in bean '" + beanName + "' " +

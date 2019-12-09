@@ -13,10 +13,10 @@ public class ConstructorsTest {
 		ac.scan("com.xiaobi.service");
 		ac.scan("com.xiaobi.mapper");
 
-		GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
-		genericBeanDefinition.setBeanClass(OrderService.class);
-		genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.UserService");
-		ac.registerBeanDefinition("orderService",genericBeanDefinition);
+//		GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
+//		genericBeanDefinition.setBeanClass(OrderService.class);
+//		genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.UserService");
+//		ac.registerBeanDefinition("orderService",genericBeanDefinition);
 
 		ac.refresh();
 
