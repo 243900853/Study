@@ -209,20 +209,28 @@ class ConstructorResolver {
 				minNrOfArgs = explicitArgs.length;
 			}
 			else {
+				//从bd里面获取构造方法参数值
 				ConstructorArgumentValues cargs = mbd.getConstructorArgumentValues();
 				resolvedValues = new ConstructorArgumentValues();
+				//往resolvedValues添加cargs参数值，解析并返回参数个数
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
 			}
 			//排序构造方法规则
-			//1、方法修饰符 public private protected default  2、参数个数多到少  3、参数精准度（指定类/接口/Object）
+			//1、方法修饰符 public private protected default  2、参数个数多到少  3、参数精准度（接口/Object/指定类）
 			AutowireUtils.sortConstructors(candidates);
+			//构造方法差异程度--存放最合适的构造方法分数，目的是为了过滤出高于这个分数的构造方法，同时保留分数最小的构造方法来实例化对象
 			int minTypeDiffWeight = Integer.MAX_VALUE;
+			//存放差异程度相等的构造方法集合--存放模糊不清的构造方法
 			Set<Constructor<?>> ambiguousConstructors = null;
+			//存放异常的集合
 			LinkedList<UnsatisfiedDependencyException> causes = null;
 
 			for (Constructor<?> candidate : candidates) {
+				//拿到当前构造方法参数
 				Class<?>[] paramTypes = candidate.getParameterTypes();
-
+				//constructorToUse != null  最终被确认使用的构造方法不为空
+				//argsToUse.length > paramTypes.length 最终确定的参数长度 > 当前构造方法的长度
+				//这里是Spring使用有效参数长度最大的构造方法判断的条件之一
 				if (constructorToUse != null && argsToUse != null && argsToUse.length > paramTypes.length) {
 					// Already found greedy constructor that can be satisfied ->
 					// do not look any further, there are only less greedy constructors left.
@@ -231,10 +239,11 @@ class ConstructorResolver {
 				if (paramTypes.length < minNrOfArgs) {
 					continue;
 				}
-
+				//存放被使用的参数临时表
 				ArgumentsHolder argsHolder;
 				if (resolvedValues != null) {
 					try {
+						//获取构造方法参数名称
 						String[] paramNames = ConstructorPropertiesChecker.evaluate(candidate, paramTypes.length);
 						if (paramNames == null) {
 							ParameterNameDiscoverer pnd = this.beanFactory.getParameterNameDiscoverer();
@@ -242,6 +251,9 @@ class ConstructorResolver {
 								paramNames = pnd.getParameterNames(candidate);
 							}
 						}
+						//createArgumentArray:将构造方法传入的参数创建成对象
+						//比如传入的OrderService这个参数对象他还没有创建，此时就需要创建对象
+						//并返回构造方法传入参数对象集合
 						argsHolder = createArgumentArray(beanName, mbd, resolvedValues, bw, paramTypes, paramNames,
 								getUserDeclaredConstructor(candidate), autowiring, candidates.length == 1);
 					}
@@ -264,18 +276,25 @@ class ConstructorResolver {
 					}
 					argsHolder = new ArgumentsHolder(explicitArgs);
 				}
-
+				//计算构造方法差异值，给各个构造方法打分，目的是为了找到那个构造方法来实例化对象最合适，越小越合适，刚开始都是-1024
 				int typeDiffWeight = (mbd.isLenientConstructorResolution() ?
 						argsHolder.getTypeDifferenceWeight(paramTypes) : argsHolder.getAssignabilityWeight(paramTypes));
 				// Choose this constructor if it represents the closest match.
+				//比较当前构造方法分数和存放最合适的构造方法分数
 				if (typeDiffWeight < minTypeDiffWeight) {
+					//当前构造方法赋给最后被确定使用的构造方法
 					constructorToUse = candidate;
+					//当前构造方法传入的参数值赋给最后被使用的参数值
 					argsHolderToUse = argsHolder;
+					//当前构造方法传入的参数名赋给最后被使用的参数名
 					argsToUse = argsHolder.arguments;
+					//更新最合适的构造方法分数
 					minTypeDiffWeight = typeDiffWeight;
+					//清空存放差异程度相等的构造方法
 					ambiguousConstructors = null;
 				}
 				else if (constructorToUse != null && typeDiffWeight == minTypeDiffWeight) {
+					//将模糊不清的构造方法添加到集合中
 					if (ambiguousConstructors == null) {
 						ambiguousConstructors = new LinkedHashSet<>();
 						ambiguousConstructors.add(constructorToUse);
@@ -296,6 +315,7 @@ class ConstructorResolver {
 						"Could not resolve matching constructor " +
 						"(hint: specify index/type/name arguments for simple parameters to avoid type ambiguities)");
 			}
+			//mbd.isLenientConstructorResolution()是否采用宽松匹配，默认为true，如果类只存在多个模糊不清的构造方法，则使用排序靠前的构造方法
 			else if (ambiguousConstructors != null && !mbd.isLenientConstructorResolution()) {
 				throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 						"Ambiguous constructor matches found in bean '" + beanName + "' " +
@@ -304,11 +324,13 @@ class ConstructorResolver {
 			}
 
 			if (explicitArgs == null && argsHolderToUse != null) {
+				//缓存构造方法，为什么原型的类不需要再次推断构造方法在这里可以解释清楚
 				argsHolderToUse.storeCache(mbd, constructorToUse);
 			}
 		}
 
 		Assert.state(argsToUse != null, "Unresolved constructor arguments");
+		//调用构造方法去实例化对象
 		bw.setBeanInstance(instantiate(beanName, mbd, constructorToUse, argsToUse));
 		return bw;
 	}
