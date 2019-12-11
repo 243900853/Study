@@ -125,7 +125,7 @@ class ConstructorResolver {
 		Constructor<?> constructorToUse = null;
 		//存构造方法参数值   最后使用的参数
 		ArgumentsHolder argsHolderToUse = null;
-		//最终确定的参数
+		//最终使用的参数
 		Object[] argsToUse = null;
 
 		if (explicitArgs != null) {
@@ -135,7 +135,7 @@ class ConstructorResolver {
 			//从bd里面拿到的参数列表
 			Object[] argsToResolve = null;
 			synchronized (mbd.constructorArgumentLock) {
-				//resolvedConstructorOrFactoryMethod：bd没有有解析过构造方法
+				//resolvedConstructorOrFactoryMethod：bd没有有解析过构造方法  原型的时候这里就不为空
 				constructorToUse = (Constructor<?>) mbd.resolvedConstructorOrFactoryMethod;
 				if (constructorToUse != null && mbd.constructorArgumentsResolved) {
 					// Found a cached constructor...
@@ -157,11 +157,14 @@ class ConstructorResolver {
 			//chosenCtors：第一次推断构造方法返回的集合
 			//在这里进行第二次推断构造方法
 			Constructor<?>[] candidates = chosenCtors;
+			//只有在构造方法注入，并且只有1个无参构造方法或者多个构造方法（不管有没有参数）
+			// candidates == null 这里条件才会成立
 			if (candidates == null) {
 				Class<?> beanClass = mbd.getBeanClass();
 				try {
 					//beanClass.getDeclaredConstructors():获取私有的构造方法
 					//beanClass.getConstructors():获取公共的构造方法
+					//这里的意义就是拿到所有构造方法
 					candidates = (mbd.isNonPublicAccessAllowed() ?
 							beanClass.getDeclaredConstructors() : beanClass.getConstructors());
 				}
@@ -174,7 +177,7 @@ class ConstructorResolver {
 
 			//处理无参构造方法
 			//candidates.length == 1 只有1个构造方法
-			//explicitArgs == null 程序员没有指定参数
+			//explicitArgs == null 程序员没有指定参数,下面是程序员指定参数
 			// 1、<constructor-arg ref="OrderService"></constructor-arg>
 			// 2、genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.OrderService");
 			// !mbd.hasConstructorArgumentValues() bd没有构造方法参数值
@@ -211,15 +214,17 @@ class ConstructorResolver {
 			}
 			else {
 				//从bd里面获取构造方法参数值
+				//genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.OrderService");
 				ConstructorArgumentValues cargs = mbd.getConstructorArgumentValues();
 				resolvedValues = new ConstructorArgumentValues();
-				//往resolvedValues添加cargs参数值，解析并返回参数个数
+				//往resolvedValues 添加cargs参数值，解析并返回参数个数
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
 			}
 			//排序构造方法规则
 			//1、方法修饰符 public private protected default  2、参数个数多到少  3、参数精准度（接口/Object/指定类）
 			AutowireUtils.sortConstructors(candidates);
-			//构造方法差异程度--存放最合适的构造方法分数，目的是为了过滤出高于这个分数的构造方法，同时保留分数最小的构造方法来实例化对象
+			//构造方法差异程度--存放最合适的构造方法分数
+			//目的是为了过滤出高于这个分数的构造方法，同时保留分数最小的构造方法来实例化对象
 			int minTypeDiffWeight = Integer.MAX_VALUE;
 			//存放差异程度相等的构造方法集合--存放模糊不清的构造方法
 			Set<Constructor<?>> ambiguousConstructors = null;
@@ -240,7 +245,7 @@ class ConstructorResolver {
 				if (paramTypes.length < minNrOfArgs) {
 					continue;
 				}
-				//存放被使用的参数临时表
+				//存放被使用的参数临时对象
 				ArgumentsHolder argsHolder;
 				if (resolvedValues != null) {
 					try {
@@ -762,11 +767,19 @@ class ConstructorResolver {
 			// Try to find matching constructor argument value, either indexed or generic.
 			ConstructorArgumentValues.ValueHolder valueHolder = null;
 			if (resolvedValues != null) {
+				//genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.OrderService");
+				//此时valueHolder为空
 				valueHolder = resolvedValues.getArgumentValue(paramIndex, paramType, paramName, usedValueHolders);
 				// If we couldn't find a direct match and are not supposed to autowire,
 				// let's try the next generic, untyped argument value as fallback:
 				// it could match after type conversion (for example, String -> int).
+				//autowiring自动装配
+				//这里判断为什么不是自动装配，因为Spring的原则是使用有效参数最多的构造方法
+				//所以这里在手动装配的情况下才能成立
+				//这里实际意义是，手动装配传入的参数是基本类型则不需要转换，如果给给是字符串，则需要转换成对象
 				if (valueHolder == null && (!autowiring || paramTypes.length == resolvedValues.getArgumentCount())) {
+					//这里就是将传入的字符串参数转换成对象
+					//com.xiaobi.service.OrderService ==> OrderService
 					valueHolder = resolvedValues.getGenericArgumentValue(null, null, usedValueHolders);
 				}
 			}

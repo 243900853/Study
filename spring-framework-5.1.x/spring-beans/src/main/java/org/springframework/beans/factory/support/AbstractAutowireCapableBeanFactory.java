@@ -1228,11 +1228,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Candidate constructors for autowiring?
 		//determineConstructorsFromBeanPostProcessors第二次调用后置处理器--第一次推断构造方法--找出有质疑的构造方法
-		//ctors有3种情况，空、1、多个
+		//ctors有3种情况:空、1、多个
+		//mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR 构造方法注入模型
+		//mbd.hasConstructorArgumentValues() 提供了构造方法参数值
+		//genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.OrderService");
+		//此时mbd.hasConstructorArgumentValues()就为true
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
-			//第二次推断构造方法--找到合理的构造方法
+			//第二次推断构造方法--找到合理的构造方法，并实例化对象
 			return autowireConstructor(beanName, mbd, ctors, args);
 		}
 
