@@ -260,7 +260,8 @@ class ConstructorResolver {
 						//createArgumentArray:将构造方法传入的参数创建成对象
 						//比如传入的OrderService这个参数对象他还没有创建，此时就需要创建对象
 						//并返回构造方法传入参数对象集合
-						//根据参数名字或者类型去找到Bean,如果Bean没有就会实例化Bean,并返回给argsHolder,作为将来要使用的参数值
+						//根据参数名字或者类型去容器中找到Bean,如果Bean没有就会实例化Bean,并返回给argsHolder,作为将来要使用的参数值
+						//getUserDeclaredConstructor(candidate):这里构造方法有可能是一个内部类，这里是准确的获取构造方法
 						argsHolder = createArgumentArray(beanName, mbd, resolvedValues, bw, paramTypes, paramNames,
 								getUserDeclaredConstructor(candidate), autowiring, candidates.length == 1);
 					}
@@ -753,7 +754,7 @@ class ConstructorResolver {
 			String beanName, RootBeanDefinition mbd, @Nullable ConstructorArgumentValues resolvedValues,
 			BeanWrapper bw, Class<?>[] paramTypes, @Nullable String[] paramNames, Executable executable,
 			boolean autowiring, boolean fallback) throws UnsatisfiedDependencyException {
-
+		//
 		TypeConverter customConverter = this.beanFactory.getCustomTypeConverter();
 		TypeConverter converter = (customConverter != null ? customConverter : bw);
 
@@ -767,19 +768,19 @@ class ConstructorResolver {
 			// Try to find matching constructor argument value, either indexed or generic.
 			ConstructorArgumentValues.ValueHolder valueHolder = null;
 			if (resolvedValues != null) {
-				//genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.OrderService");
-				//此时valueHolder为空
+				//通过构造方法参数去Spring容器里面找，比如通过类型是Class,名字是clazz去Spring容器里面找
 				valueHolder = resolvedValues.getArgumentValue(paramIndex, paramType, paramName, usedValueHolders);
 				// If we couldn't find a direct match and are not supposed to autowire,
 				// let's try the next generic, untyped argument value as fallback:
 				// it could match after type conversion (for example, String -> int).
-				//autowiring自动装配
+				//autowiring = (chosenCtors != null || mbd.getResolvedAutowireMode() == AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR)
+				//构造方法自动装配或者加了@Autowired合理的构造方法（多个@Autowired注解，不存在required为true的构造方法）
 				//这里判断为什么不是自动装配，因为Spring的原则是使用有效参数最多的构造方法
+				//Spring会推断出最优的构造方法之后才会去拿程序员提供的构造方法参数
 				//所以这里在手动装配的情况下才能成立
-				//这里实际意义是，手动装配传入的参数是基本类型则不需要转换，如果给给是字符串，则需要转换成对象
 				if (valueHolder == null && (!autowiring || paramTypes.length == resolvedValues.getArgumentCount())) {
-					//这里就是将传入的字符串参数转换成对象
-					//com.xiaobi.service.OrderService ==> OrderService
+					//genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.OrderService");
+					//获取程序员手动传入构造方法参数com.xiaobi.service.OrderService
 					valueHolder = resolvedValues.getGenericArgumentValue(null, null, usedValueHolders);
 				}
 			}
@@ -796,6 +797,7 @@ class ConstructorResolver {
 				else {
 					MethodParameter methodParam = MethodParameter.forExecutable(executable, paramIndex);
 					try {
+						//将com.xiaobi.service.OrderService转换成OrderService
 						convertedValue = converter.convertIfNecessary(originalValue, paramType, methodParam);
 					}
 					catch (TypeMismatchException ex) {

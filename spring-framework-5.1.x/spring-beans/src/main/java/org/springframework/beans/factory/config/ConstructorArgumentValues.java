@@ -351,8 +351,10 @@ public class ConstructorArgumentValues {
 	@Nullable
 	public ValueHolder getArgumentValue(int index, @Nullable Class<?> requiredType, @Nullable String requiredName, @Nullable Set<ValueHolder> usedValueHolders) {
 		Assert.isTrue(index >= 0, "Index must not be negative");
+		//获取有序的构造方法参数<constructor-arg value="ZL0" index="0"></constructor-arg>
 		ValueHolder valueHolder = getIndexedArgumentValue(index, requiredType, requiredName);
 		if (valueHolder == null) {
+			//获取无序的构造方法参数<constructor-arg ref="xbBean"></constructor-arg>
 			valueHolder = getGenericArgumentValue(requiredType, requiredName, usedValueHolders);
 		}
 		return valueHolder;

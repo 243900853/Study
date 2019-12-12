@@ -579,6 +579,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (!mbd.postProcessed) {
 				try {
 					//第三次调用后置处理器--合并BeanDefinition
+					//验证合并后的bd
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
@@ -1188,16 +1189,20 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					"Bean class isn't public, and non-public access not allowed: " + beanClass.getName());
 		}
 
+		//orderService.setInstanceSupplier(()-> new OrderService(beanFactory.getBean(IndexService.class)));
+		//程序员手动提供Supplier<?>
 		Supplier<?> instanceSupplier = mbd.getInstanceSupplier();
 		if (instanceSupplier != null) {
 			return obtainFromSupplier(instanceSupplier, beanName);
 		}
-		// Spring通过@Bean去创建Spring Bean的情况
+		// Spring通过@Bean或者XML配置方法去创建Spring对象的情况下
+		// <bean id="xbService" class="com.xiaobi.service.XBService" factory-method="aspectOf">
 		// Spring第一步：扫描@ComponentScan("com.xiaobi")
 		// Spring第二步：扫描加了@Bean的方法，将返回的对象转换成bd，并将方法存放到factoryMethodName里面
 		// 当再次使用返回对象的时候，通过bd的factoryMethodName去获取到方法的返回对象
 		// 被扫描出来的正常bd在这里为空 mbd.getFactoryMethodName() == null
 		if (mbd.getFactoryMethodName() != null) {
+			//直接通过bd里面指定的工厂方法去实例化对象
 			return instantiateUsingFactoryMethod(beanName, mbd, args);
 		}
 
