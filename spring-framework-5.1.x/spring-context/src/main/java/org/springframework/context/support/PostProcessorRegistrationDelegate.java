@@ -97,7 +97,10 @@ final class PostProcessorRegistrationDelegate {
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
 			//根据类型从BeanDefinitionMap中找到名字
 			//Spring内部只有1个类(ConfigurationClassPostProcessor)实现了这个接口
-			//通过后置处理器完成所有bd的合并
+			//beanFactory.getBeanNamesForType：通过类型找到所有实现BeanDefinitionRegistryPostProcessor的类
+			//后面有一个BeanDefinitionRegistryPostProcessor的功能将所有扫描出来的bd、api注册的bd、Spring内置的bd都进行合并
+			// 最后将合并后的bd缓存起来（保存到mergedBeanDefinitions里面）
+			//供后面preInstantiateSingletons的RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName)从缓存中获取数据
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			//第一次处理"内部"的后置处理器
@@ -331,6 +334,7 @@ final class PostProcessorRegistrationDelegate {
 			Collection<? extends BeanDefinitionRegistryPostProcessor> postProcessors, BeanDefinitionRegistry registry) {
 
 		for (BeanDefinitionRegistryPostProcessor postProcessor : postProcessors) {
+			//ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry默认调用doScan方法扫描所有的类
 			postProcessor.postProcessBeanDefinitionRegistry(registry);
 		}
 	}

@@ -1377,6 +1377,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		if (mbd != null) {
 			return mbd;
 		}
+		//合并bd
 		return getMergedBeanDefinition(beanName, getBeanDefinition(beanName));
 	}
 
@@ -1417,8 +1418,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			if (mbd == null) {
+				//父bd不存在
 				if (bd.getParentName() == null) {
 					// Use copy of given root bean definition.
+					//将父bd复制到合并后的bd里面
 					if (bd instanceof RootBeanDefinition) {
 						mbd = ((RootBeanDefinition) bd).cloneBeanDefinition();
 					}
@@ -1428,10 +1431,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 				else {
 					// Child bean definition: needs to be merged with parent.
+					//子bd存在父bd
 					BeanDefinition pbd;
 					try {
+						//获取父bd名称
 						String parentBeanName = transformedBeanName(bd.getParentName());
+						//子bd和父bd名称不能相同
 						if (!beanName.equals(parentBeanName)) {
+							//获取父bd
 							pbd = getMergedBeanDefinition(parentBeanName);
 						}
 						else {
@@ -1451,7 +1458,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 								"Could not resolve parent bean definition '" + bd.getParentName() + "'", ex);
 					}
 					// Deep copy with overridden values.
+					//将父bd复制到合并后的bd里面
 					mbd = new RootBeanDefinition(pbd);
+					//子bd信息合并到合并后的bd里面
+					//子、父bd存在的相同的信息，子bd信息会覆盖父bd信息，不相同则合并在一起
 					mbd.overrideFrom(bd);
 				}
 
@@ -1470,6 +1480,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 				// Cache the merged bean definition for the time being
 				// (it might still get re-merged later on in order to pick up metadata changes)
+				//缓存合并后的bd
 				if (containingBd == null && isCacheBeanMetadata()) {
 					this.mergedBeanDefinitions.put(beanName, mbd);
 				}

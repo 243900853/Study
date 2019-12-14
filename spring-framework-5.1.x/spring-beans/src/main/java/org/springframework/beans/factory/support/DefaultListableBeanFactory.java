@@ -825,6 +825,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		//通过BeanDefinition的名字在beanDefinitionMap找到所有BeanDefinition
 		//遍历所有的BeanDefinition 根据名字、继而验证BeanDefinition
 		for (String beanName : beanNames) {
+			//getMergedLocalBeanDefinition：获取合并后的bd,没有合并bd的则合并
+			//为第三次调用后置处理器(applyMergedBeanDefinitionPostProcessors)提供数据源（所有合并后的bd）
 			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
 			//验证BeanDefinition
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {

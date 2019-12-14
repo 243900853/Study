@@ -566,7 +566,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			//返回实例化对象的包裹类BeanWrapper
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
-		//可以通过instanceWrapper.getWrappedInstance()去包裹类获取创建出来的对象
+		//可以通过instanceWrapper.getWrappedInstance()去包裹类获取实例化出来的对象
 		//此时还只是一个对象不是bean
 		final Object bean = instanceWrapper.getWrappedInstance();
 		Class<?> beanType = instanceWrapper.getWrappedClass();
@@ -578,8 +578,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
 				try {
-					//第三次调用后置处理器--合并BeanDefinition
-					//验证合并后的bd
+					//第三次调用后置处理器--通过后置处理器应用合并之后的BeanDefinition
+					//应用bd-->从bd里面把需要注入的属性拿出来放到缓存集合中，供populateBean后面获取这些属性进行属性填充
+					//Spring内部在这里只完成了一部分：缓存注入元素信息，另一部分：供程序员扩展
+					//验证合并后的bd，也可以叫解析合并后的bd
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
@@ -1103,6 +1105,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		for (BeanPostProcessor bp : getBeanPostProcessors()) {
 			if (bp instanceof MergedBeanDefinitionPostProcessor) {
 				MergedBeanDefinitionPostProcessor bdp = (MergedBeanDefinitionPostProcessor) bp;
+				//主要看AutowiredAnnotationBeanPostProcessor.postProcessMergedBeanDefinition
 				bdp.postProcessMergedBeanDefinition(mbd, beanType, beanName);
 			}
 		}

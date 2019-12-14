@@ -51,6 +51,7 @@ public class InjectionMetadata {
 
 	private final Class<?> targetClass;
 
+	//需要注入的元素集合，比如加了@Autowired、@Resource的对象
 	private final Collection<InjectedElement> injectedElements;
 
 	@Nullable
