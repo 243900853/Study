@@ -437,12 +437,16 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 
+			//将当前bd从合成bd里面移出，目的是为了第三次合并bd
+			//因为程序员可以通过后置处理器去改变bd，所以将bd移出之后，重新在合并一次
 			if (!typeCheckOnly) {
+				//将当前bd从合并后的bd中移出，并标示当前bd不需要合并
 				markBeanAsCreated(beanName);
 			}
 
 			try {
-				//合并子bd，用root bd接收
+				//第三次合并bd--合并子bd，用root bd接收
+				//如果程序员通过后置处理器对bd进行修改，此时需要再次对修改的bd进行合
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				checkMergedBeanDefinition(mbd, beanName, args);
 
@@ -476,6 +480,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 							//完成了目标对象的创建
 							//如果需要代理，还完成了代理
 							//简单认为Spring生命周期从这里开始
+							//创建出来的bd都是合并后的bd
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {
@@ -1746,7 +1751,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				if (!this.alreadyCreated.contains(beanName)) {
 					// Let the bean definition get re-merged now that we're actually creating
 					// the bean... just in case some of its metadata changed in the meantime.
+					//将当前bd从合并后的bd集合中移除
 					clearMergedBeanDefinition(beanName);
+					//保存不需要合并的合并bd
 					this.alreadyCreated.add(beanName);
 				}
 			}
