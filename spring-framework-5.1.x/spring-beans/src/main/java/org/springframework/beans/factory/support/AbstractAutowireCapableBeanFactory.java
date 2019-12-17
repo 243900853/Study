@@ -1105,7 +1105,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		for (BeanPostProcessor bp : getBeanPostProcessors()) {
 			if (bp instanceof MergedBeanDefinitionPostProcessor) {
 				MergedBeanDefinitionPostProcessor bdp = (MergedBeanDefinitionPostProcessor) bp;
-				//主要看AutowiredAnnotationBeanPostProcessor.postProcessMergedBeanDefinition
+				//AutowiredAnnotationBeanPostProcessor.postProcessMergedBeanDefinition：
+				//解析加了@Autowired的类，将里面的元信息解析出来，并保存到InjectionMetadata对象中，最后缓存到injectionMetadataCache
+				//CommonAnnotationBeanPostProcessor.postProcessMergedBeanDefinition：
+				//解析加了@Resource的类，将里面的元信息解析出来，并保存到InjectionMetadata对象中，最后缓存到injectionMetadataCache
+				//这里的后置处理器主要是将加了某些注解的类，解析成元信息保存起来，最后缓存到injectionMetadataCache
+				//找到所有需要完成注入的“元”，为了以后可以填充
 				bdp.postProcessMergedBeanDefinition(mbd, beanType, beanName);
 			}
 		}

@@ -295,7 +295,9 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
+		//调用父类方法，查找所有生命周期回调方法--初始化和销毁
 		super.postProcessMergedBeanDefinition(beanDefinition, beanType, beanName);
+		//找出所有加了@Resource的元数据，并将需要注入的原数据信息保存到InjectionMetadata里面
 		InjectionMetadata metadata = findResourceMetadata(beanName, beanType, null);
 		metadata.checkConfigMembers(beanDefinition);
 	}
@@ -348,7 +350,9 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 					if (metadata != null) {
 						metadata.clear(pvs);
 					}
+					//解析加了@Resource注解的对象，并保存元信息
 					metadata = buildResourceMetadata(clazz);
+					//将类的元信息保存到InjectionMetadata对象中，并缓存起来
 					this.injectionMetadataCache.put(cacheKey, metadata);
 				}
 			}
@@ -376,6 +380,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 					}
 					currElements.add(new EjbRefElement(field, field, null));
 				}
+				//属性加了@Resource注解
 				else if (field.isAnnotationPresent(Resource.class)) {
 					if (Modifier.isStatic(field.getModifiers())) {
 						throw new IllegalStateException("@Resource annotation is not supported on static fields");
@@ -385,7 +390,9 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 					}
 				}
 			});
-
+			//处理当前类中所有需要注入的方法,method里面只有方法，没有构造方法。
+			//为什么不需要处理构造方法呢？因为构造方法在createBeanInstance这里就处理完了
+			//applyMergedBeanDefinitionPostProcessors在createBeanInstance后面
 			ReflectionUtils.doWithLocalMethods(targetClass, method -> {
 				Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
 				if (!BridgeMethodResolver.isVisibilityBridgeMethodPair(method, bridgedMethod)) {

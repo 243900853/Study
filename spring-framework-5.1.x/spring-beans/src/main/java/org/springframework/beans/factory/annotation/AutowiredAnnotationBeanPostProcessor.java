@@ -229,7 +229,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		//findAutowiringMetadata找出所有加了@Autowired的元数据
-		//InjectionMetadata注入的原数据
+		//InjectionMetadata注入的元数据。比如类、方法、构造方法、属性等，这里的信息都可以保存在InjectionMetadata.InjectedElement.Member这个对象里面
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, beanType, null);
 		metadata.checkConfigMembers(beanDefinition);
 	}
@@ -439,6 +439,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		// Fall back to class name as cache key, for backwards compatibility with custom callers.
 		String cacheKey = (StringUtils.hasLength(beanName) ? beanName : clazz.getName());
 		// Quick check on the concurrent map first, with minimal locking.
+		//从缓存中获取类的元信息是为了提高效率，主要是针对原型对象
 		InjectionMetadata metadata = this.injectionMetadataCache.get(cacheKey);
 		if (InjectionMetadata.needsRefresh(metadata, clazz)) {
 			synchronized (this.injectionMetadataCache) {
@@ -447,7 +448,9 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					if (metadata != null) {
 						metadata.clear(pvs);
 					}
+					//解析加了@Autowired注解的对象，并保存元信息
 					metadata = buildAutowiringMetadata(clazz);
+					//将类的元信息保存到InjectionMetadata对象中，并缓存起来
 					this.injectionMetadataCache.put(cacheKey, metadata);
 				}
 			}
@@ -456,51 +459,65 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	}
 
 	private InjectionMetadata buildAutowiringMetadata(final Class<?> clazz) {
+		//存放元信息的集合
 		List<InjectionMetadata.InjectedElement> elements = new ArrayList<>();
 		Class<?> targetClass = clazz;
 
 		do {
+			//存放元信息的临时集合
 			final List<InjectionMetadata.InjectedElement> currElements = new ArrayList<>();
-
+			//FieldCallback.doWith会执行lamda表达式里面的逻辑,如果doWith没有参数,则lamda表达式的field改为()
+			//处理当前类中所有需要注入的属性
 			ReflectionUtils.doWithLocalFields(targetClass, field -> {
+				//找到属性上加了@Autowired的属性，并获取Autowired的所有属性和属性值
 				AnnotationAttributes ann = findAutowiredAnnotation(field);
 				if (ann != null) {
+					//加了@Autowired注解的属性，不能加static修饰
 					if (Modifier.isStatic(field.getModifiers())) {
 						if (logger.isInfoEnabled()) {
 							logger.info("Autowired annotation is not supported on static fields: " + field);
 						}
 						return;
 					}
+					//获取@Autowired注解的required值
 					boolean required = determineRequiredStatus(ann);
+					//将属性和Autowired注解的required值保存到AutowiredFieldElement中，并添加到存放元信息的临时集合中
 					currElements.add(new AutowiredFieldElement(field, required));
 				}
 			});
-
+			//处理当前类中所有需要注入的方法,method里面只有方法，没有构造方法。
+			//为什么不需要处理构造方法呢？因为构造方法在createBeanInstance这里就处理完了
+			//applyMergedBeanDefinitionPostProcessors在createBeanInstance后面
 			ReflectionUtils.doWithLocalMethods(targetClass, method -> {
 				Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
 				if (!BridgeMethodResolver.isVisibilityBridgeMethodPair(method, bridgedMethod)) {
 					return;
 				}
+				//找到方法上加了@Autowired的方法，并获取Autowired的所有属性和属性值
 				AnnotationAttributes ann = findAutowiredAnnotation(bridgedMethod);
 				if (ann != null && method.equals(ClassUtils.getMostSpecificMethod(method, clazz))) {
+					//加了@Autowired注解的方法，不能加static修饰
 					if (Modifier.isStatic(method.getModifiers())) {
 						if (logger.isInfoEnabled()) {
 							logger.info("Autowired annotation is not supported on static methods: " + method);
 						}
 						return;
 					}
+					//加了@Autowired注解的方法，不能是无参方法
 					if (method.getParameterCount() == 0) {
 						if (logger.isInfoEnabled()) {
 							logger.info("Autowired annotation should only be used on methods with parameters: " +
 									method);
 						}
 					}
+					//获取Autowired的required属性值
 					boolean required = determineRequiredStatus(ann);
 					PropertyDescriptor pd = BeanUtils.findPropertyForMethod(bridgedMethod, clazz);
+					//将数据存放到元信息的临时集合中
 					currElements.add(new AutowiredMethodElement(method, required, pd));
 				}
 			});
-
+			//元信息的临时集合存放到元信息的集合
 			elements.addAll(0, currElements);
 			targetClass = targetClass.getSuperclass();
 		}
@@ -511,8 +528,11 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 	@Nullable
 	private AnnotationAttributes findAutowiredAnnotation(AccessibleObject ao) {
+		//ao.getAnnotations()获取当前属性上的所有注解
 		if (ao.getAnnotations().length > 0) {  // autowiring annotations have to be local
+			//判断注解的类型，autowiredAnnotationTypes里面只有Autowired和Value这2个注解
 			for (Class<? extends Annotation> type : this.autowiredAnnotationTypes) {
+				//获取注解里面的属性和属性的值
 				AnnotationAttributes attributes = AnnotatedElementUtils.getMergedAnnotationAttributes(ao, type);
 				if (attributes != null) {
 					return attributes;
