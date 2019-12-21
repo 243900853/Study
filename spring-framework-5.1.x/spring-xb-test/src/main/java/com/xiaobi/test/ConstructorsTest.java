@@ -17,10 +17,13 @@ public class ConstructorsTest {
 		ac.scan("com.xiaobi.service");
 		ac.scan("com.xiaobi.mapper");
 
-//		GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
-//		genericBeanDefinition.setBeanClass(OrderService.class);
-//		genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.UserService");
-//		ac.registerBeanDefinition("orderService",genericBeanDefinition);
+		GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
+		genericBeanDefinition.setBeanClass(OrderService.class);
+		//为构造方法传入参数赋值
+		genericBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.xiaobi.service.UserService");
+		ac.registerBeanDefinition("orderService",genericBeanDefinition);
+		//为属性赋值
+		genericBeanDefinition.getPropertyValues().add("age","18岁");
 
 		//合并bd--父bd
 		RootBeanDefinition root = new RootBeanDefinition();
@@ -39,6 +42,7 @@ public class ConstructorsTest {
 
 		System.out.println(ac.getBean(OrderService.class));
 		System.out.println(ac.getBean(B.class));
+		System.out.println(ac.getBean(OrderService.class).getAge());
 
 	}
 }

@@ -5,6 +5,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrderService {
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
+
+	private String age;
+
+	public void setUserService(UserService userService){
+		System.out.println("自动执行Set方法");
+	}
+
 
 //	public OrderService() {
 //		System.out.println("默认无参");

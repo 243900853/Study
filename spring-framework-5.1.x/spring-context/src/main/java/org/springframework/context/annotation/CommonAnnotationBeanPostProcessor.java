@@ -297,7 +297,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		//调用父类方法，查找所有生命周期回调方法--初始化和销毁
 		super.postProcessMergedBeanDefinition(beanDefinition, beanType, beanName);
-		//找出所有加了@Resource的元数据，并将需要注入的原数据信息保存到InjectionMetadata里面
+		//找出所有加了@Resource的元信息，并将需要注入的元信息保存到InjectionMetadata里面
 		InjectionMetadata metadata = findResourceMetadata(beanName, beanType, null);
 		metadata.checkConfigMembers(beanDefinition);
 	}

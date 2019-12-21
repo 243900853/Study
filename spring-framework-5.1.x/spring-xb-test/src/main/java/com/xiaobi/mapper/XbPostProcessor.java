@@ -28,6 +28,7 @@ public class XbPostProcessor implements BeanFactoryPostProcessor {
 		GenericBeanDefinition orderService = (GenericBeanDefinition)beanFactory.getBeanDefinition("orderService");
 		//orderService.setLenientConstructorResolution(false); //关闭宽松匹配
 		//orderService.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR);
+		orderService.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 		//存在多个模糊构造方法，如果不设置为构造方法自动注入，则会报错
 		//但是如果这样写就不会报错，看源码createBeanInstance.obtainFromSupplier
 		//他的意思是让Spring不用做后面的一系列推断构造方法操作

@@ -1433,14 +1433,17 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Give any InstantiationAwareBeanPostProcessors the opportunity to modify the
 		// state of the bean before properties are set. This can be used, for example,
 		// to support styles of field injection.
-		boolean continueWithPropertyPopulation = true;
 		//判断允不允许完成属性注入
+		boolean continueWithPropertyPopulation = true;
 		//继承InstantiationAwareBeanPostProcessor实现postProcessAfterInstantiation接口
-		// 让他恒定返回false，这样所有的bean都不会完成属性注入
+		//public class p implement s InstantiationAwareBeanPostProcessor
+		//让他恒定返回false，这样所有的bean都不会完成属性注入,里面提供beanName是为了单个控制
 		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+					//bw.getWrappedInstance()去BeanWrapper这个包裹类获取实例化出来的对象
+					//此时还只是一个对象不是bean
 					if (!ibp.postProcessAfterInstantiation(bw.getWrappedInstance(), beanName)) {
 						continueWithPropertyPopulation = false;
 						break;
@@ -1452,18 +1455,21 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (!continueWithPropertyPopulation) {
 			return;
 		}
-
+		//genericBeanDefinition.getPropertyValues().add("age","18岁");
+		//程序员人工为属性赋值
 		PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
 		//XML配置进行注入，判断注入模型
 		if (mbd.getResolvedAutowireMode() == AUTOWIRE_BY_NAME || mbd.getResolvedAutowireMode() == AUTOWIRE_BY_TYPE) {
 			MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
 			// Add property values based on autowire by name if applicable.
 			//判断注入模型是Byname，进行自动依赖注入
+			//获取MutablePropertyValues.propertyValueList里面的所有set方法
 			if (mbd.getResolvedAutowireMode() == AUTOWIRE_BY_NAME) {
 				autowireByName(beanName, mbd, bw, newPvs);
 			}
 			// Add property values based on autowire by type if applicable.
 			//判断注入模型是Bytype，进行自动依赖注入
+			//获取MutablePropertyValues.propertyValueList里面的所有set方法
 			if (mbd.getResolvedAutowireMode() == AUTOWIRE_BY_TYPE) {
 				autowireByType(beanName, mbd, bw, newPvs);
 			}
@@ -1486,8 +1492,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
 					//根据不同的后置处理器，注入不同的属性
-					//AutowireAnnotationBeanPostProcessor则根据注方式解注入对象的属性 @Autowired
-					//CommonAnnotationBeanPostProcessor则根据注解方式注入对象的属性 @Resource
+					//AutowireAnnotationBeanPostProcessor根据注解方式注入对象的属性 @Autowired
+					//CommonAnnotationBeanPostProcessor根据注解方式注入对象的属性 @Resource
 					//比如IndexService需要注入UserService，此时在这一步完成，循环依赖也在这一步完成
 					PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
 					if (pvsToUse == null) {
@@ -1511,6 +1517,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		if (pvs != null) {
+			//自动依赖注入，获取set方法后执行set方法
 			applyPropertyValues(beanName, mbd, bw, pvs);
 		}
 	}
