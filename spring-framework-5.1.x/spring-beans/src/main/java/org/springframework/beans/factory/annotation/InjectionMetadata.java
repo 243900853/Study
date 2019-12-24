@@ -48,10 +48,10 @@ import org.springframework.util.ReflectionUtils;
 public class InjectionMetadata {
 
 	private static final Log logger = LogFactory.getLog(InjectionMetadata.class);
-
+	//当前对象
 	private final Class<?> targetClass;
 
-	//需要注入的元素集合，比如加了@Autowired、@Resource的对象
+	//需要注入的元素集合，比如加了@Autowired、@Resource注解的元信息（方法、对象、构造方法、属性）
 	private final Collection<InjectedElement> injectedElements;
 
 	@Nullable
