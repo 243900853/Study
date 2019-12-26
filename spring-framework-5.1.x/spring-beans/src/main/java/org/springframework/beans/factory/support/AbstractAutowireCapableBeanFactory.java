@@ -606,7 +606,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 			//第四次调用后置处理器，判断是否需要aop
 			//这个方法就是将Bean工厂放到singletonFactories二级缓存中
-			//循环依赖提前AOP代理对象创建这里完成getEarlyBeanReference
+			//getEarlyBeanReference：循环依赖提前AOP代理对象创建这里完成
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
@@ -1444,6 +1444,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
 					//bw.getWrappedInstance()去BeanWrapper这个包裹类获取实例化出来的对象
 					//此时还只是一个对象不是bean
+					//如果程序员不去扩展的话，这里一般不进入
 					if (!ibp.postProcessAfterInstantiation(bw.getWrappedInstance(), beanName)) {
 						continueWithPropertyPopulation = false;
 						break;
@@ -1456,7 +1457,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			return;
 		}
 		//genericBeanDefinition.getPropertyValues().add("age","18岁");
-		//程序员人工为属性赋值
+		//程序员人为为属性提供属性值
 		PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
 		//XML配置进行注入，判断注入模型
 		if (mbd.getResolvedAutowireMode() == AUTOWIRE_BY_NAME || mbd.getResolvedAutowireMode() == AUTOWIRE_BY_TYPE) {
@@ -1492,9 +1493,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
 					//根据不同的后置处理器，注入不同的属性
-					//AutowireAnnotationBeanPostProcessor根据注解方式注入对象的属性 @Autowired
-					//CommonAnnotationBeanPostProcessor根据注解方式注入对象的属性 @Resource
-					//比如IndexService需要注入UserService，此时在这一步完成，循环依赖也在这一步完成
+					//AutowireAnnotationBeanPostProcessor找到加了@Autowired的元（从缓存中获取，数据源在Merge的时候提供了），并完成属性注入
+					//CommonAnnotationBeanPostProcessor找到加了@Resource的元（从缓存中获取，数据源在Merge的时候提供了），并完成属性注入
+					//比如IndexService需要注入UserService，此时在这一步完成，循环依赖也在这一步完成，数据保存在BeanWrapper.wrappedObject
 					PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
 					if (pvsToUse == null) {
 						if (filteredPds == null) {

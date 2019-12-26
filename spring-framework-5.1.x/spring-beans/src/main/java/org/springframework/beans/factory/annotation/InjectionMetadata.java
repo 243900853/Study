@@ -80,6 +80,7 @@ public class InjectionMetadata {
 	}
 
 	public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
+		//InjectedElement.Member：需要注入的元信息保存在这里面
 		Collection<InjectedElement> checkedElements = this.checkedElements;
 		Collection<InjectedElement> elementsToIterate =
 				(checkedElements != null ? checkedElements : this.injectedElements);
@@ -88,6 +89,10 @@ public class InjectionMetadata {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Processing injected element of bean '" + beanName + "': " + element);
 				}
+				//对元信息进行属性注入
+				//Collection<InjectedElement>集合存放的是父类，所有会根据不同的子类调用同一个父类的方法。
+				//AutowiredFieldElement.inject
+				//AutowiredMethodElement.inject
 				element.inject(target, beanName, pvs);
 			}
 		}

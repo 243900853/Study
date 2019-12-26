@@ -395,6 +395,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		//从合并后的bd中获取需要注入的属性
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
 		try {
+			//注入需要注入的属性
 			metadata.inject(bean, beanName, pvs);
 		}
 		catch (BeanCreationException ex) {
@@ -625,22 +626,28 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		protected void inject(Object bean, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
 			Field field = (Field) this.member;
 			Object value;
+			//this.cached默认为false，当整个属性完成注入的时候才为true
 			if (this.cached) {
 				value = resolvedCachedArgument(beanName, this.cachedFieldValue);
 			}
 			else {
+				//需要注入的描述
 				DependencyDescriptor desc = new DependencyDescriptor(field, this.required);
+				//需要注入到那个类上
 				desc.setContainingClass(bean.getClass());
 				Set<String> autowiredBeanNames = new LinkedHashSet<>(1);
 				Assert.state(beanFactory != null, "No BeanFactory available");
+				//类型转换，比如字符串com.xiaobi.service.IndexService需要转换成IndexService.class
 				TypeConverter typeConverter = beanFactory.getTypeConverter();
 				try {
+					//获取需要注入的属性值
 					value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);
 				}
 				catch (BeansException ex) {
 					throw new UnsatisfiedDependencyException(null, beanName, new InjectionPoint(field), ex);
 				}
 				synchronized (this) {
+					//将cached由false改为true
 					if (!this.cached) {
 						if (value != null || this.required) {
 							this.cachedFieldValue = desc;
@@ -663,6 +670,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 			}
 			if (value != null) {
 				ReflectionUtils.makeAccessible(field);
+				//java反射注入
 				field.set(bean, value);
 			}
 		}
