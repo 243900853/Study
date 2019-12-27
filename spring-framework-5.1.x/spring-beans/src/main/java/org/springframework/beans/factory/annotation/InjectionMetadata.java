@@ -81,6 +81,7 @@ public class InjectionMetadata {
 
 	public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
 		//InjectedElement.Member：需要注入的元信息保存在这里面
+		//Collection<InjectedElement>存放类所有需要注入的属性
 		Collection<InjectedElement> checkedElements = this.checkedElements;
 		Collection<InjectedElement> elementsToIterate =
 				(checkedElements != null ? checkedElements : this.injectedElements);
@@ -93,6 +94,7 @@ public class InjectionMetadata {
 				//Collection<InjectedElement>集合存放的是父类，所有会根据不同的子类调用同一个父类的方法。
 				//AutowiredFieldElement.inject
 				//AutowiredMethodElement.inject
+				//集合定义的对象是父类，但添加的是子类对象，调用父类方法的时候，首先去找子类同名的方法并调用，如果没有则调用父类方法。
 				element.inject(target, beanName, pvs);
 			}
 		}

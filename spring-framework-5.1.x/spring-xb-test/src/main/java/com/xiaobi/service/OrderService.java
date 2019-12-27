@@ -1,10 +1,21 @@
 package com.xiaobi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class OrderService {
+	@Autowired
+	XB XBService;//自动注入先根据类型XB找，此时可以找到2个，在根据名字找，找到一个XBService注入
+	@Autowired
+	List<XB> xbServices;
+	@Lazy
+	@Autowired
+	UserService userService;
+
 	public String getAge() {
 		return age;
 	}

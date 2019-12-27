@@ -1495,7 +1495,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					//根据不同的后置处理器，注入不同的属性
 					//AutowireAnnotationBeanPostProcessor找到加了@Autowired的元（从缓存中获取，数据源在Merge的时候提供了），并完成属性注入
 					//CommonAnnotationBeanPostProcessor找到加了@Resource的元（从缓存中获取，数据源在Merge的时候提供了），并完成属性注入
-					//比如IndexService需要注入UserService，此时在这一步完成，循环依赖也在这一步完成，数据保存在BeanWrapper.wrappedObject
+					//比如IndexService需要注入UserService，此时在这一步完成，循环依赖也在这一步完成
+					//注入的参数值保存在BeanWrapper.wrappedObject,bw.getWrappedInstance()可以获取到数据
 					PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
 					if (pvsToUse == null) {
 						if (filteredPds == null) {

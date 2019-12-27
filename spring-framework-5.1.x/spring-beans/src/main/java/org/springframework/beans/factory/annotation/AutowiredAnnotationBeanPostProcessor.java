@@ -395,7 +395,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		//从合并后的bd中获取需要注入的属性
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
 		try {
-			//注入需要注入的属性
+			//为所有需要注入的元信息赋值
 			metadata.inject(bean, beanName, pvs);
 		}
 		catch (BeanCreationException ex) {
@@ -631,7 +631,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				value = resolvedCachedArgument(beanName, this.cachedFieldValue);
 			}
 			else {
-				//需要注入的描述
+				//存放需要注入信息的描述 比如：需要注入I接口，他的名称是程序员自己定义的，他的类型是I.class，需要注入的属性在那个类中等等
 				DependencyDescriptor desc = new DependencyDescriptor(field, this.required);
 				//需要注入到那个类上
 				desc.setContainingClass(bean.getClass());
