@@ -627,11 +627,14 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 			Field field = (Field) this.member;
 			Object value;
 			//this.cached默认为false，当整个属性完成注入的时候才为true
+			//这个缓存
 			if (this.cached) {
+				//this.cachedFieldValue：将cached由false改为true前，将ShortcutDependencyDescriptor这个对象赋给cachedFieldValue
 				value = resolvedCachedArgument(beanName, this.cachedFieldValue);
 			}
 			else {
 				//存放需要注入信息的描述 比如：需要注入I接口，他的名称是程序员自己定义的，他的类型是I.class，需要注入的属性在那个类中等等
+				//将需要注入的元封装成对象，以便后面代码可以直接通过对象获取到需要注入单个元的相关信息
 				DependencyDescriptor desc = new DependencyDescriptor(field, this.required);
 				//需要注入到那个类上
 				desc.setContainingClass(bean.getClass());
@@ -640,7 +643,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				//类型转换，比如字符串com.xiaobi.service.IndexService需要转换成IndexService.class
 				TypeConverter typeConverter = beanFactory.getTypeConverter();
 				try {
-					//获取需要注入的属性值
+					//获取属性需要注入的属性值
 					value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);
 				}
 				catch (BeansException ex) {

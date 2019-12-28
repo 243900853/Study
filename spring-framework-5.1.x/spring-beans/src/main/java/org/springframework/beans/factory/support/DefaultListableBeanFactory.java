@@ -1186,6 +1186,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			Object result = getAutowireCandidateResolver().getLazyResolutionProxyIfNecessary(
 					descriptor, requestingBeanName);
 			if (result == null) {
+				//返回属性需要注入的属性值
 				result = doResolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter);
 			}
 			return result;
@@ -1198,11 +1199,20 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		InjectionPoint previousInjectionPoint = ConstructorResolver.setCurrentInjectionPoint(descriptor);
 		try {
+			//这里与AutowiredFieldElement.inject的this.cached有关
+			//DependencyDescriptor.resolveShortcut这里直接返回空，为什么会存在这个方法。
+			//因为他有个子类ShortcutDependencyDescriptor实现DependencyDescriptor.resolveShortcut这个方法
+			//AutowiredFieldElement.inject.resolvedCachedArgument方法里面的this.cachedFieldValue就是ShortcutDependencyDescriptor
+			//resolvedCachedArgument的方法调用判断条件就是this.cached
+			//在resolvedCachedArgument里面会再次调用resolveDependency.doResolveDependency方法
+			//所以会再次进入到这里，此时调用的方法就是ShortcutDependencyDescriptor.resolveShortcut
 			Object shortcut = descriptor.resolveShortcut(this);
+			//如果AutowiredFieldElement.inject的this.cached为true的时候，shortcut就不为空。
+			//因为调用的是ShortcutDependencyDescriptor.resolveShortcut，所以就不用走后面的流程，达到缓存的效果
 			if (shortcut != null) {
 				return shortcut;
 			}
-			//获取接口类型
+			//获取属性的类型
 			Class<?> type = descriptor.getDependencyType();
 			Object value = getAutowireCandidateResolver().getSuggestedValue(descriptor);
 			if (value != null) {
@@ -1230,7 +1240,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (multipleBeans != null) {
 				return multipleBeans;
 			}
-			//注入的一个对象，根据类型找到多个与之匹配的class类。比如：注入对象是接口，这里会找到所有实现接口的对象
+			//注入的属性是一个接口，根据类型找到多个与之匹配的class类。比如：注入对象是接口，这里会找到所有实现接口的对象
 			//Map<beanName,Class> 这里的意思可以理解为：注入的时候根据类型找
 			Map<String, Object> matchingBeans = findAutowireCandidates(beanName, type, descriptor);
 			if (matchingBeans.isEmpty()) {
@@ -1271,7 +1281,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				autowiredBeanNames.add(autowiredBeanName);
 			}
 			if (instanceCandidate instanceof Class) {
-				//如果是class对象则直接通过getBean获取
+				//根据“类型”和“名称”通过getBean获取到Bean
 				instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, this);
 			}
 			Object result = instanceCandidate;
@@ -1436,7 +1446,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 */
 	protected Map<String, Object> findAutowireCandidates(
 			@Nullable String beanName, Class<?> requiredType, DependencyDescriptor descriptor) {
-		//根据接口类型，获取所有实现接口Bean的名字
+		//根据接口类型，获取所有实现接口Bean的名字，在BeanDefinitionMap中找
 		String[] candidateNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 				this, requiredType, true, descriptor.isEager());
 		Map<String, Object> result = new LinkedHashMap<>(candidateNames.length);
@@ -1451,6 +1461,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 		}
+
 		for (String candidate : candidateNames) {
 			if (!isSelfReference(beanName, candidate) && isAutowireCandidate(candidate, descriptor)) {
 				addCandidateEntry(result, candidate, descriptor, requiredType);
