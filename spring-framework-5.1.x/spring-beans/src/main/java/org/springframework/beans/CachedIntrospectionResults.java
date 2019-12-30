@@ -173,7 +173,7 @@ public final class CachedIntrospectionResults {
 		if (results != null) {
 			return results;
 		}
-
+		//缓存解析后的数据
 		results = new CachedIntrospectionResults(beanClass);
 		ConcurrentMap<Class<?>, CachedIntrospectionResults> classCacheToUse;
 
@@ -270,6 +270,7 @@ public final class CachedIntrospectionResults {
 			if (logger.isTraceEnabled()) {
 				logger.trace("Getting BeanInfo for class [" + beanClass.getName() + "]");
 			}
+			//getBeanInfo这个是java内省关键代码，获取当前类的所有信息
 			this.beanInfo = getBeanInfo(beanClass);
 
 			if (logger.isTraceEnabled()) {

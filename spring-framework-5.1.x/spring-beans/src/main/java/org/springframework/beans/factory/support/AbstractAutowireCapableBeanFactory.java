@@ -413,6 +413,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Object result = existingBean;
 		for (BeanPostProcessor processor : getBeanPostProcessors()) {
 			//这个后置处理器的postProcessBeforeInitialization这个方法是专门来处理生命周期回调
+			//InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization
 			Object current = processor.postProcessBeforeInitialization(result, beanName);
 			if (current == null) {
 				return result;
@@ -606,7 +607,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 			//第四次调用后置处理器，判断是否需要aop
 			//这个方法就是将Bean工厂放到singletonFactories二级缓存中
-			//getEarlyBeanReference：循环依赖提前AOP代理对象创建这里完成
+			//getEarlyBeanReference：循环依赖，提前AOP代理对象创建这里完成(提前暴露工厂)
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
@@ -1472,6 +1473,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			//判断注入模型是Bytype，进行自动依赖注入
 			//获取MutablePropertyValues.propertyValueList里面的所有set方法
 			if (mbd.getResolvedAutowireMode() == AUTOWIRE_BY_TYPE) {
+				//找出bw当中所有需要注入的方法
+				//set方法有一个参数，则同时获取到传入参数的参数值，并调用传入参数的无参构造方法
+				//如果没有参数，则不调用
 				autowireByType(beanName, mbd, bw, newPvs);
 			}
 			pvs = newPvs;
@@ -1519,7 +1523,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		if (pvs != null) {
-			//自动依赖注入，获取set方法后执行set方法
+			//应用属性值。1、程序员手动提供 2、Spring自己找出来的
+			//自动依赖注入，获取set方法和传入参数值后执行set方法
 			applyPropertyValues(beanName, mbd, bw, pvs);
 		}
 	}
@@ -1576,6 +1581,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		Set<String> autowiredBeanNames = new LinkedHashSet<>(4);
+		//获取到需要注入的set方法名字，这里会缓存set方法数据。比如：setXXX，这里的XXX
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
 		for (String propertyName : propertyNames) {
 			try {
@@ -1587,6 +1593,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					// Do not allow eager init for type matching in case of a prioritized post-processor.
 					boolean eager = !PriorityOrdered.class.isInstance(bw.getWrappedInstance());
 					DependencyDescriptor desc = new AutowireByTypeDependencyDescriptor(methodParam, eager);
+					//获取到传入的参数值，此时会调用传入参数的无参构造方法
 					Object autowiredArgument = resolveDependency(desc, beanName, autowiredBeanNames, converter);
 					if (autowiredArgument != null) {
 						pvs.add(propertyName, autowiredArgument);
@@ -1620,6 +1627,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected String[] unsatisfiedNonSimpleProperties(AbstractBeanDefinition mbd, BeanWrapper bw) {
 		Set<String> result = new TreeSet<>();
 		PropertyValues pvs = mbd.getPropertyValues();
+		//通过java的内省获取到类所有的get和set方法，源码：java.beans.Introspector.getTargetPropertyInfo
 		PropertyDescriptor[] pds = bw.getPropertyDescriptors();
 		for (PropertyDescriptor pd : pds) {
 			if (pd.getWriteMethod() != null && !isExcludedFromDependencyCheck(pd) && !pvs.contains(pd.getName()) &&
@@ -1874,7 +1882,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
 			//applyBeanPostProcessorsAfterInitialization对bean做初始化干预
-			//真正的代理对象创建在这里面完成
+			//真正的AOP代理对象创建在这里面完成
 			//真正的方法在AbstractAutoProxyCreator.postProcessAfterInitialization.wrapIfNecessary这里面
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}

@@ -171,6 +171,7 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 	 */
 	private CachedIntrospectionResults getCachedIntrospectionResults() {
 		if (this.cachedIntrospectionResults == null) {
+			//CachedIntrospectionResults.forClass解析class
 			this.cachedIntrospectionResults = CachedIntrospectionResults.forClass(getWrappedClass());
 		}
 		return this.cachedIntrospectionResults;
@@ -245,6 +246,7 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 
 	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
+		//getCachedIntrospectionResults()获取get、set方法
 		return getCachedIntrospectionResults().getPropertyDescriptors();
 	}
 
