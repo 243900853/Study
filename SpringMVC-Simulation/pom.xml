@@ -45,6 +45,7 @@
   <build>
     <finalName>SpringMVC-Simulation</finalName>
     <plugins>
+      <!-- Maven内嵌tomcat -->
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
