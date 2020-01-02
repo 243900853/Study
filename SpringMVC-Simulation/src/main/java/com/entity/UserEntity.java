@@ -5,10 +5,13 @@ public class UserEntity {
     private int age;
     private String sex;
 
-    public UserEntity(String userName, int age, String sex) {
-        this.userName = userName;
-        this.age = age;
-        this.sex = sex;
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "userName='" + userName + '\'' +
+                ", age=" + age +
+                ", sex='" + sex + '\'' +
+                '}';
     }
 
     public String getUserName() {

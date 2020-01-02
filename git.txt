@@ -49,3 +49,7 @@ git config --list
 git config --global --unset http.proxy
 --获取某个配置
 git config --get http.proxy
+
+--覆盖本地文件
+git reset
+git checkout .

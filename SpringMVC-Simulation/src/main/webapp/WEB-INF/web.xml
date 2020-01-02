@@ -14,4 +14,10 @@
     <!-- 启动项目的时候，调用初始化方法XbDispatcherServlet.init -->
     <load-on-startup>1</load-on-startup>
   </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>xbServlet</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
