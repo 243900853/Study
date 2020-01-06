@@ -2,6 +2,7 @@ package com.controller;
 
 import com.annotation.ControllerX;
 import com.annotation.RequestMappingX;
+import com.annotation.ResponseBodyX;
 import com.entity.UserEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,11 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController {
 
     @RequestMappingX("/getUser.do")
+    @ResponseBodyX
     public Object getUser(String userName, HttpServletRequest request, HttpServletResponse response, UserEntity userEntity){
         System.out.println(userName);
         System.out.println(request);
         System.out.println(response);
         System.out.println(userEntity);
-        return "";
+        return "test";
+    }
+
+    @RequestMappingX("/getUsers.do")
+    public Object getUsers(){
+        return "index";
     }
 }

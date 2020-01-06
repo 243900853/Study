@@ -1,3 +1,4 @@
 <beans>
     <componentScan package="com"/>
+    <view prefix="/page/" suffix=".html"/>
 </beans>

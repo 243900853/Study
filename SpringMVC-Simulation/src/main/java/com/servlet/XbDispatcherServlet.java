@@ -1,6 +1,7 @@
 package com.servlet;
 
 import com.annotation.ControllerX;
+import com.annotation.ResponseBodyX;
 import com.annotation.RequestMappingX;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -12,11 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.SAXParser;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
@@ -30,10 +29,18 @@ public class XbDispatcherServlet extends HttpServlet {
     //扫描包的路径
     private static String COMPONENT_SCAN_ELEM_NAME = "componentScan";
     private static String COMPONENT_SCAN_ELEM_PACKAGE_NAME = "package";
-    //Map集合：存放Url对应的方法
+    //Map集合：存放Url对应的方法名
     private static Map<String, Method> urlMethodMap = new HashMap<>();
-
+    //Map集合：存放Url对应方法的类对象
     private static Map<String, Object> urlInstanceMap = new HashMap<>();
+    //Web视图解析
+    private static String WEB_VIEW = "view";
+    //跳转页面前缀
+    private static String WEB_PREFIX_NAME = "prefix";
+    private static String WEB_PREFIX_VALUE = "";
+    //跳转页面后缀
+    private static String WEB_SUFFIX_NAME = "suffix";
+    private static String WEB_SUFFIX_VALUE = "";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -45,8 +52,13 @@ public class XbDispatcherServlet extends HttpServlet {
         //使用dom4j解析程序员提供的springMVC.xml
         File file = new File(PROJECT_PATH + "//" + initParameter);
         Document parse = parse(file);
+        Element rootElement = parse.getRootElement();
+        //找到View元素的页面跳转前缀
+        Element view = rootElement.element(WEB_VIEW);
+        WEB_PREFIX_VALUE = view.attribute(WEB_PREFIX_NAME).getValue();
+        WEB_SUFFIX_VALUE = view.attribute(WEB_SUFFIX_NAME).getValue();
         //找到componentScan元素
-        Element componentScanElem = parse.getRootElement().element(COMPONENT_SCAN_ELEM_NAME);
+        Element componentScanElem = rootElement.element(COMPONENT_SCAN_ELEM_NAME);
         //找到componentScan元素下package值
         String value = componentScanElem.attribute(COMPONENT_SCAN_ELEM_PACKAGE_NAME).getValue();
         //扫描项目
@@ -148,6 +160,7 @@ public class XbDispatcherServlet extends HttpServlet {
                 //1、File--Settings--Java Compiler--additional command line parameters增加-parameters
                 //2、File--Settings--Java Compiler--1.7改为1.8
                 //3、File--Project Structure--Language level改为8
+                //4、File--Project Structure--Modules--Dependencies--将系统默认的1.8改为自己本地的1.8版本
                 //获取传入参数集合
                 Parameter[] parameters = method.getParameters();
                 Object[] objects = new Object[parameters.length];
@@ -191,14 +204,26 @@ public class XbDispatcherServlet extends HttpServlet {
                         objects[i] = o;
                     }
                 }
-                method.invoke(controllerObject, objects);
+                //获取方法执行之后的返回值
+                Object result = method.invoke(controllerObject, objects);
+                //判断方法是否需要返回对象出去
+                if (!method.getReturnType().equals(Void.class)) {
+                    //对ResponseBody请求进行处理
+                    ResponseBodyX responseBodyX = method.getAnnotation(ResponseBodyX.class);
+                    if (responseBodyX != null) {
+                        //方法上存在ResponseBody，则将数据返回到前端
+                        resp.getWriter().write(String.valueOf(result));
+                    }else{
+                        //方法上不存在ResponseBody，则进行页面跳转
+                        req.getRequestDispatcher(WEB_PREFIX_VALUE+String.valueOf(result)+WEB_SUFFIX_VALUE).forward(req,resp);
+                    }
+                }
             } else {
                 resp.setStatus(404);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        super.doPost(req, resp);
     }
 
 }
