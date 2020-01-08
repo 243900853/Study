@@ -155,7 +155,7 @@ public class XbDispatcherServlet extends HttpServlet {
         Method method = urlMethodMap.get(requestURI);
         try {
             if (method != null) {
-                //java8以前  直接那参数名称 拿不到
+                //java8以前  直接那参数名称 拿不到，因为他拿到的是arg0 arg1 arg2
                 //需要修改3个地方
                 //1、File--Settings--Java Compiler--additional command line parameters增加-parameters
                 //2、File--Settings--Java Compiler--1.7改为1.8
