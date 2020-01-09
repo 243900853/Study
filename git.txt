@@ -18,6 +18,8 @@ git remote set-url origin git@github.com:243900853/Study.git
 
 --要提交的文件
 git status
+--要提交的文件比较差异
+git diff
 --将提交文件存入缓存
 git add .
 --添加备注
