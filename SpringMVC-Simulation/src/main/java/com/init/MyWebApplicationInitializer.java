@@ -12,10 +12,16 @@ import javax.servlet.ServletRegistration;
 //SpringMVC零XML启动
 //这里的代码相当于web.xml的基础配置
 public class MyWebApplicationInitializer implements WebApplicationInitializer {
-    //web容器启动的时候会调用onStartup这个方法,为什么？
-    //因为ServletContainerInitializer.onStartup方法这是Servlet3.0规范，简称SPI，这个规范是java定义的，tomcat等web容器实现这个Servlet规范
-    //Spring为开发者也实现了SPI规范：下面是固定配置文件路径
+    //web容器启动的时候会调用onStartup这个方法,为什么？因为tomcat等web容器实现了Servlet3.0规范
+    //Servlet3.0规范（简称SPI，这个规范是java定义的）：
+    //1、在指定目录下生成指定文件：META-INF\services\javax.servlet.ServletContainerInitializer
+    //2、文件内容是自定义类的路径：org.springframework.web.SpringServletContainerInitializer
+    //3、自定义类SpringServletContainerInitializer继承ServletContainerInitializer类，重写onStartup方法
+
+    //Spring为开发者也实现了SPI规范：下面是Spring的实现文件路径
     //org\springframework\spring-web\5.0.8.RELEASE\spring-web-5.0.8.RELEASE.jar!\META-INF\services\javax.servlet.ServletContainerInitializer
+    //SpringServletContainerInitializer使用了HandlesTypes注解，所以以后直接实现WebApplicationInitializer接口，Spring就可以调用onStartup方法
+
     //Web调用Spring onStartup方法流程：
     // 1、tomcat找到ServletContainerInitializer的实现类，并调用onStartup方法
     // 2、Spring的ServletContainerInitializer类继承了ServletContainerInitializer类，重写onStartup方法

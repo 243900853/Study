@@ -4,6 +4,7 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <!--
   <servlet>
     <servlet-name>xbServlet</servlet-name>
     <servlet-class>com.servlet.XbDispatcherServlet</servlet-class>
@@ -11,7 +12,7 @@
       <param-name>xmlPathLocal</param-name>
       <param-value>springMVC.xml</param-value>
     </init-param>
-    <!-- 启动项目的时候，调用初始化方法XbDispatcherServlet.init -->
+    &lt;!&ndash; 启动项目的时候，调用初始化方法XbDispatcherServlet.init &ndash;&gt;
     <load-on-startup>1</load-on-startup>
   </servlet>
   
@@ -19,5 +20,5 @@
     <servlet-name>xbServlet</servlet-name>
     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
-  
+  -->
 </web-app>

@@ -1,6 +1,9 @@
 com\entity\UserEntity.class
+com\servlet\MyServletContainerInitializer.class
 com\controller\UserController.class
 com\annotation\ControllerX.class
 com\annotation\ResponseBodyX.class
+com\config\AppConfig.class
 com\servlet\XbDispatcherServlet.class
+com\init\MyWebApplicationInitializer.class
 com\annotation\RequestMappingX.class
