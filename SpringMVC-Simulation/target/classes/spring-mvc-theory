@@ -1,0 +1,12 @@
+spring mvc调用Controller执行的原理
+1、tomcat启动会自动加载web.xml配置文件
+2、web.xml配置文件配置spring-mvc.xml
+3、web.xml会加载DispatcherServlet
+4、DispatcherServlet扫描spring-mvc.xml的配置文件，扫描整个项目，根据配置文件给定的目录来扫描
+5、扫描所有加了@Controller注解的类
+6、当扫描到加了@Controller注解的类之后遍历里面所有的方法
+7、拿到方法对象之后，解析方法上面是否加了@RequestMapping注解
+8、定义一个map集合（Map<String,Method>），把@RequestMapping的value与方法对象绑定起来
+9、拦截到请求之后，拿到请求的URI
+10、拿URI去Map里面去get
+https://www.processon.com/view/link/5c15f236e4b00dc4b20ec916

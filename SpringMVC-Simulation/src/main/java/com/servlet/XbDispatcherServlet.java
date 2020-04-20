@@ -21,6 +21,7 @@ import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
+//手写模拟Spring MVC
 public class XbDispatcherServlet extends HttpServlet {
     //XML名称
     private static String XML_PATH_LOCAL = "xmlPathLocal";

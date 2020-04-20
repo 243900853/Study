@@ -4,7 +4,8 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
-  <!--
+  <description>手写模拟Spring MVC</description>
+    <!--
   <servlet>
     <servlet-name>xbServlet</servlet-name>
     <servlet-class>com.servlet.XbDispatcherServlet</servlet-class>
@@ -15,10 +16,10 @@
     &lt;!&ndash; 启动项目的时候，调用初始化方法XbDispatcherServlet.init &ndash;&gt;
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>xbServlet</servlet-name>
     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
-  -->
+    -->
 </web-app>
