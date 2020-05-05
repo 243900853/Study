@@ -1,0 +1,15 @@
+server:
+  port: 80
+
+pass: 11
+a: 1
+b: 2
+booleanA: true
+
+student:
+  name: xiaobi
+  age: 100
+  sex: 男
+  email: 123@qq.com
+  friend: [1,2]
+  #friend: [{name: 小小,age: 12},{name: 小er,age: 12}]

@@ -1,15 +1,14 @@
-package com.init;
+package com.xiaobi.init;
 
-import com.config.AppConfig;
-import com.servlet.WebInit;
+import com.xiaobi.config.AppConfig;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
+//如果是通过内嵌的tomcat启动，则不会调用onStartup这个方法，因为Spring这样设计是为了降低第三方库破坏SpringBoot应用程序的风险，Spring可以管理tomcat启动代码
 //0 XML配置Spring MVC
 //SpringMVC零XML启动
 //这里的代码相当于web.xml的基础配置
