@@ -296,11 +296,14 @@ public class SpringApplication {
 	 * @return a running {@link ApplicationContext}
 	 */
 	public ConfigurableApplicationContext run(String... args) {
+		//Spring的计时器帮助类
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		ConfigurableApplicationContext context = null;
 		Collection<SpringBootExceptionReporter> exceptionReporters = new ArrayList<>();
+		//初始化图形化界面的组件，SpringBoot图形
 		configureHeadlessProperty();
+		//getRunListeners.getSpringFactoriesInstances从配置文件里（spring.factories）读取SpringApplicationRunListener对象
 		SpringApplicationRunListeners listeners = getRunListeners(args);
 		listeners.starting();
 		try {
