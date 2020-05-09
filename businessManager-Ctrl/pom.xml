@@ -55,6 +55,10 @@
 
 <!--    SpringBoot热部署，只要加了这个包，以后自己代码改变的时候，Spring会自动在不停服务的情况下实现代码的变更-->
 <!--    热部署原理：开启一个线程去定时扫描某个文件夹目录下面的所有文件判断当文件改动的时候调用监听器-->
+<!--    源码：spring-boot-devtools-2.0.2.RELEASE.jar!\META-INF\spring.factories\LocalDevToolsAutoConfiguration.onClassPathChanged-->
+<!--    当SpringBoot的文件监听器发现文件改动的时候，会发布一个事件：ClassPathChangedEvent-->
+<!--    当监听到ClassPathChangedEvent的时候，就会去重启应用，把ApplicationContext.close掉，并且通知JVM gc和清除对象引用-->
+<!--    通过热部署的ClassLoader去加载ApplicationClassLoader，并通过反射去调用程序启动-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
