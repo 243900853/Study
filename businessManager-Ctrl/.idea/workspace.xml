@@ -2,89 +2,45 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9c0c101b-01a1-4b07-a151-5aadb2a4b319" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-actuator-autoconfigure/spring-boot-actuator-autoconfigure.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-actuator/spring-boot-actuator.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-autoconfigure/spring-boot-autoconfigure.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-cli/spring-boot-cli.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-dependencies/spring-boot-dependencies.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-devtools/spring-boot-devtools.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-docs/spring-boot-docs.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-parent/spring-boot-parent.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-project.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-properties-migrator/spring-boot-properties-migrator.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-activemq/spring-boot-starter-activemq.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-actuator/spring-boot-starter-actuator.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-amqp/spring-boot-starter-amqp.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-aop/spring-boot-starter-aop.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-artemis/spring-boot-starter-artemis.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-batch/spring-boot-starter-batch.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-cache/spring-boot-starter-cache.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-cloud-connectors/spring-boot-starter-cloud-connectors.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-cassandra-reactive/spring-boot-starter-data-cassandra-reactive.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-cassandra/spring-boot-starter-data-cassandra.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-couchbase-reactive/spring-boot-starter-data-couchbase-reactive.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-couchbase/spring-boot-starter-data-couchbase.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-elasticsearch/spring-boot-starter-data-elasticsearch.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-jdbc/spring-boot-starter-data-jdbc.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-jpa/spring-boot-starter-data-jpa.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-ldap/spring-boot-starter-data-ldap.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-mongodb-reactive/spring-boot-starter-data-mongodb-reactive.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-mongodb/spring-boot-starter-data-mongodb.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-neo4j/spring-boot-starter-data-neo4j.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-redis-reactive/spring-boot-starter-data-redis-reactive.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-redis/spring-boot-starter-data-redis.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-rest/spring-boot-starter-data-rest.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-data-solr/spring-boot-starter-data-solr.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-freemarker/spring-boot-starter-freemarker.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-groovy-templates/spring-boot-starter-groovy-templates.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-hateoas/spring-boot-starter-hateoas.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-integration/spring-boot-starter-integration.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-jdbc/spring-boot-starter-jdbc.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-jersey/spring-boot-starter-jersey.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-jetty/spring-boot-starter-jetty.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-jooq/spring-boot-starter-jooq.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-json/spring-boot-starter-json.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-jta-atomikos/spring-boot-starter-jta-atomikos.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-jta-bitronix/spring-boot-starter-jta-bitronix.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-log4j2/spring-boot-starter-log4j2.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-logging/spring-boot-starter-logging.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-mail/spring-boot-starter-mail.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-mustache/spring-boot-starter-mustache.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-oauth2-client/spring-boot-starter-oauth2-client.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-oauth2-resource-server/spring-boot-starter-oauth2-resource-server.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-parent/spring-boot-starter-parent.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-quartz/spring-boot-starter-quartz.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-reactor-netty/spring-boot-starter-reactor-netty.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-rsocket/spring-boot-starter-rsocket.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-security/spring-boot-starter-security.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-test/spring-boot-starter-test.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-thymeleaf/spring-boot-starter-thymeleaf.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-tomcat/spring-boot-starter-tomcat.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-undertow/spring-boot-starter-undertow.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-validation/spring-boot-starter-validation.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-web-services/spring-boot-starter-web-services.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-web/spring-boot-starter-web.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-webflux/spring-boot-starter-webflux.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter-websocket/spring-boot-starter-websocket.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starter/spring-boot-starter.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-starters/spring-boot-starters.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-test-autoconfigure/spring-boot-test-autoconfigure.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-test/spring-boot-test.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/org.springframework.boot.gradle.plugin/org.springframework.boot.gradle.plugin.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-antlib/spring-boot-antlib.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-autoconfigure-processor/spring-boot-autoconfigure-processor.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-configuration-docs/spring-boot-configuration-docs.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-configuration-metadata/spring-boot-configuration-metadata.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-configuration-processor/spring-boot-configuration-processor.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/spring-boot-gradle-plugin.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-loader-tools/spring-boot-loader-tools.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-loader/spring-boot-loader.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-maven-plugin/spring-boot-maven-plugin.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-test-support/spring-boot-test-support.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot-tools/spring-boot-tools.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot/spring-boot.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/banner.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../rpt/rpt.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../rpt/src/main/java/com/App.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../rpt/src/main/java/com/xiaobi/config/AppConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../rpt/src/main/java/com/xiaobi/controller/MenuController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../rpt/src/main/resources/banner.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xiaobi/config/AppConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/xiaobi/config/AppConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/note/spring-boot-note.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/note/spring-boot-note.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/spring.factories" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/App.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/bean/A.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/bean/B.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/bean/Student.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/classLoad/Application.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/classLoad/FileListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/classLoad/MyClassLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/classLoad/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/config/AppConfig$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/config/AppConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/config/InstantiationImportSelector.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/config/MyListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/config/MyListenerToClass.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/config/MyViewResolver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/config/StringConverterDate.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/controller/TestController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/event/ApplicationEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/event/FileUploadEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/init/MyServletContextInitializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/init/MyWebApplicationInitializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/listener/ApplicationListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/listener/ApplicationListenerManage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/listener/FileListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/listener/FileUploadListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/xiaobi/util/FileUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/SpringBootTest.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../spring-boot-project/spring-boot/src/main/java/org/springframework/boot/SpringApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot/src/main/java/org/springframework/boot/SpringApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/servlet/context/ServletWebServerApplicationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/servlet/context/ServletWebServerApplicationContext.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -143,7 +99,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../spring-boot-project" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../spring-framework-5.1.x" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.29655173" />
@@ -171,58 +127,9 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.App (1)">
-    <configuration name="FileUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.xiaobi.util.FileUtil" />
-      <module name="businessManager" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.xiaobi.event.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MyClassLoader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.xiaobi.classLoad.MyClassLoader" />
-      <module name="businessManager" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.xiaobi.classLoad.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SpringBootTest.test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="businessManager" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="SpringBootTest" />
-      <option name="METHOD_NAME" value="test" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="App (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="businessManager-Ctrl" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.App" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager">
     <configuration name="App" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="businessManager" />
+      <module name="businessManager-Ctrl" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.*" />
@@ -236,11 +143,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.App (1)" />
-        <item itemvalue="Application.MyClassLoader" />
         <item itemvalue="Spring Boot.App" />
-        <item itemvalue="Application.FileUtil" />
-        <item itemvalue="JUnit.SpringBootTest.test" />
       </list>
     </recent_temporary>
   </component>
@@ -261,7 +164,8 @@
       <workItem from="1588599920780" duration="7274000" />
       <workItem from="1588688092451" duration="99000" />
       <workItem from="1588688219774" duration="843000" />
-      <workItem from="1588773910492" duration="9505000" />
+      <workItem from="1588773910492" duration="19165000" />
+      <workItem from="1589613498326" duration="16529000" />
     </task>
     <servers />
   </component>
@@ -283,6 +187,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/xiaobi/init/MyWebApplicationInitializer.java</url>
+          <line>50</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint enabled="true" type="javascript-exception" />
       </default-breakpoints>

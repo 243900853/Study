@@ -150,6 +150,8 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 	protected void onRefresh() {
 		super.onRefresh();
 		try {
+			//在这里判断，当前使用外部web容器还是内嵌tomcat容器
+			//如果是内嵌则立即启动tomcat容器
 			createWebServer();
 		}
 		catch (Throwable ex) {

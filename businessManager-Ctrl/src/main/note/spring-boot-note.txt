@@ -8,11 +8,11 @@ SpringBoot是把DispatcherServlet放到Spring容器中。
 2:WebAutoConfiguration
 SpringMVC:参考AppConfig implements WebMvcConfigurer + @EnableWebMvc
 SpringBoot:参考WebMvcAutoConfiguration
-(1)AppConfig extends WebMvcConfigurationSupport或者AppConfig implements WebMvcConfigurer，则自动配置失效
-(2)AppConfig implements WebMvcConfigurer，则SpringBoot和SpringMVC可以同时使用
+(1)AppConfig extends WebMvcConfigurationSupport或者AppConfig implements WebMvcConfigurer + @EnableWebMvc，则自动配置失效
+(2)AppConfig implements WebMvcConfigurer或则，则SpringBoot和SpringMVC可以同时使用
 (2.1)AppConfig implements WebMvcConfigurer + @EnableWebMvc，则只能使用SpringMVC，
 因为@EnableWebMvc加了这个注解Spring会自动加载@EnableWebMvcDelegatingWebMvcConfiguration.WebMvcConfigurationSupport，
-但是SpringBoot的WebMvcConfigurationSupport这个类加了@ConditionalOnMissingBean({WebMvcConfigurationSupport.class})这个注解，
+但是SpringBoot的WebMvcAutoConfiguration这个类加了@ConditionalOnMissingBean({WebMvcConfigurationSupport.class})这个注解，
 这个注解的意思就是如果Spring容器中如果有WebMvcConfigurationSupport这个类的话，就不会做自动配置，也就不会将WebMvcAutoConfiguration注入到Spring容器中
 
 3:ContentNegotiatingViewResolver
@@ -32,3 +32,13 @@ SpringBoot自动配置消息转换器：会再当前的spring容器里面找到�
 1:spring boot会自己注入一个默认的实现  jackson
 2：如果用户需要自己配置的话 只需要@Bean,用@Order保证顺序
 参考AppConfig.fastJsonHttpMessageConverter()
+
+6:如何自己写的代码整合到SpringBoot里面
+（1）打包自己的项目
+（2）创建start项目，pom文件里面放自己项目jar包和spring-boot-starter-web包
+（3）创建AppConfig.class，@Configuration+@ConditionalOnBean(XXX.class)这个注解的意思是如果存在XXX.class才将AppConfig.class注入到Spring容器
+（4）自定义注解abc，@Target(ElementType.TYPE)+@Retention(RetentionPolicy.RUNTIME)+@Import(XXX.class)
+（5）在start项目的spring.factories里面
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+创建AppConfig.class路径
+（6）以后，别人使用我们开发的工具时，只用在类上面加@abc这个我们定义的注解就能使用了

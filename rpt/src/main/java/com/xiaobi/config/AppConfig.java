@@ -2,31 +2,38 @@ package com.xiaobi.config;
 
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.server.WebServerFactory;
-import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.validation.MessageCodesResolver;
+import org.springframework.validation.Validator;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
+//开启代理
+@EnableAspectJAutoProxy
 @Configuration
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer{
+
+
+
     @Bean
     public FastJsonHttpMessageConverter fastJsonHttpMessageConverter(){
         return new FastJsonHttpMessageConverter();
-    }
-
-    @Bean
-    public MyViewResolver myViewResolver(){
-        return new MyViewResolver();
     }
 
     @Bean
@@ -58,7 +65,7 @@ public class AppConfig {
     // Executor executor = this.getTaskExecutor();这串代码就是获取线程池来跑监听器
     //这里的BeanName必须是applicationEventMulticaster，因为在"配置事件驱动器参考源码"已经定义死了
     @Bean("applicationEventMulticaster")
-    public SimpleApplicationEventMulticaster simpleApplicationEventMulticaster(BeanFactory beanFactory,ThreadPoolTaskExecutor poolTaskExecutor){
+    public SimpleApplicationEventMulticaster simpleApplicationEventMulticaster(BeanFactory beanFactory, ThreadPoolTaskExecutor poolTaskExecutor){
         SimpleApplicationEventMulticaster simpleApplicationEventMulticaster = new SimpleApplicationEventMulticaster(beanFactory);
         simpleApplicationEventMulticaster.setTaskExecutor(poolTaskExecutor);
         return simpleApplicationEventMulticaster;
@@ -68,27 +75,101 @@ public class AppConfig {
     //具体在ServletWebServerFactoryAutoConfiguration.EmbeddedTomcat里面
     //SpringBoot默认有tomcat依赖，同时tomcat作为最先加载的web容器（顺序参考ServletWebServerFactoryAutoConfiguration.@Import），所以就算加了jetty依赖包，也是不会生效的，需要剔除tomcat依赖，才能使用其他web容器
     //yml配置参考ServletWebServerFactoryAutoConfiguration的@EnableConfigurationProperties({ServerProperties.class})
-//    @Bean
+    @Bean
     public TomcatServletWebServerFactory tomcat(){
         //getServletWebServerFactoryBean 如果数组长度大于1 抛异常，也就是注入TomcatServletWebServerFactory之后，如果还存在其他web容器的话就会报错
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
-        tomcat.setPort(80);
+        tomcat.setPort(8080);
         return tomcat;
     }
 
-    //自定义方式配置当前web容器
-    //目前SpringBoot只支持这四种web容器：Tomcat Jetty Netty undertow
-    @Bean
-    public WebServerFactoryCustomizer customizer(){
-        WebServerFactoryCustomizer webServerFactoryCustomizer = new WebServerFactoryCustomizer() {
-            //factory当前正在使用的web容器factory对象
-            @Override
-            public void customize(WebServerFactory factory) {
-                TomcatServletWebServerFactory factory1 = (TomcatServletWebServerFactory) factory;
-                factory1.setPort(80);
-            }
-        };
-        return webServerFactoryCustomizer;
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+
+    }
+
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+
+    }
+
+
+    @Override
+    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+
+    }
+
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+
+    }
+
+    //视图解析器
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        //设置跳转页面的前缀、后缀
+        registry.jsp("/page/",".html");
+    }
+
+    //添加自定义适配器
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new ArgumentResolver());
+    }
+
+
+    @Override
+    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+
+    }
+
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+
+    }
+
+    @Override
+    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+
+    }
+
+    @Override
+    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+
+    }
+
+    @Override
+    public Validator getValidator() {
+        return null;
+    }
+
+    @Override
+    public MessageCodesResolver getMessageCodesResolver() {
+        return null;
     }
 
 }
