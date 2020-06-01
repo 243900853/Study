@@ -1,0 +1,29 @@
+SpringMVC
+1、tomcat实现servlet的spi规范
+ 1.1 tomcat找到ServletContainerInitializer的实现类，并调用onStartup方法
+ 1.2 Spring的SpringServletContainerInitializer类继承了ServletContainerInitializer类，重写onStartup方法，SpringServletContainerInitializer这个类只用循环调用子类的onStartup方法。
+ 1.3 tomcat调用Spring的SpringServletContainerInitializer.onStartup方法
+2、tomcat启动时会在实现SpringServletContainerInitializer子类的onStartup方法中，扫描并加载web.xml配置文件
+3、web.xml配置文件配置spring-mvc.xml
+4、web.xml会加载DispatcherServlet
+5、DispatcherServlet扫描spring-mvc.xml的配置文件，扫描整个项目，根据配置文件给定的目录来扫描
+6、扫描所有加了@Controller注解的类
+7、当扫描到加了@Controller注解的类之后遍历里面所有的方法
+8、拿到方法对象之后，解析方法上面是否加了@RequestMapping注解
+9、定义一个map集合（Map<String,Method>），把@RequestMapping的value与方法对象绑定起来
+10、拦截到请求之后，拿到请求的URI
+11、拿URI去Map里面去get，找到方法
+12、消息转换器处理，扫描方法里面的参数，然后根据request.getParameterNames()获取到前台传过来的参数，通过java反射对参数进行赋值
+13、视图解析器处理。如果方法加了@ResponseBody，则进行resp.getWriter().write(result)直接将数据通过Response返回出去，如果是ModelAndView则进行视图的处理；如果是String，则通过请求转发req.getRequestDispatcher(前缀+String.valueOf(result)+后缀).forward(req,resp)进行页面跳转；
+
+
+Dubbo
+生产者实现接口，并向注册中心提供接口路径和实现类
+消费者获取接口，动态代理接口
+消费者通过接口名向注册中心获取到接口实现类的路径，解析路径，看是通过dubbo协议发送请求还是通过http发送请求
+传递接口参数
+通过java反射技术进行实例化
+通过spi来实现协议的动态处理
+
+
+

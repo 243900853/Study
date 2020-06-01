@@ -6,13 +6,21 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="rpt" />
+        <module name="rpt-web" />
+        <module name="rpt-center" />
+        <module name="rpt-api" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="rpt-interface" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="rpt" options="-parameters" />
+      <module name="rpt-api" options="" />
+      <module name="rpt-center" options="" />
+      <module name="rpt-interface" options="-parameters" />
+      <module name="rpt-web" options="" />
     </option>
   </component>
 </project>

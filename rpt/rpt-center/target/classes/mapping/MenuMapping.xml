@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rpt.system.mapper.MenuMapper">
+
+    <resultMap id="BaseResultMap" type="com.rpt.system.bean.Menu">
+        <result column="menuId" jdbcType="INTEGER" property="menu_id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+    </resultMap>
+
+    <select id="queryMenuByLevel" resultType="com.rpt.system.bean.Menu">
+        select * from menu where level = #{level}
+    </select>
+
+</mapper>
