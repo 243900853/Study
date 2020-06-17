@@ -25,5 +25,23 @@ Dubbo
 通过java反射技术进行实例化
 通过spi来实现协议的动态处理
 
+SpringBoot自动配置原理
+1、@SpringBootApplication注解
+2、@EnableAutoConfiguration注解
+3、@Import(EnableAutoConfigurationImportSelector.class)
+EnableAutoConfigurationImportSelector extend SelectImports
+4、EnableAutoConfigurationImportSelector.selectImports方法里面SpringFactoriesLoader.loadFactoryNames方法去加载并解析META-INF/spring.factories这个配置文件
+5、spring.factories这个文件的主要功能是存放需要注入到Spring容器中的class路径信息，以Key=Value形式存放，多个Value时使用,隔开，例如：
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+自己需要注入到Spring容器的Class对象路径
+6、真正使自动配置生效的key是org.springframework.boot.autoconfigure.EnableAutoConfiguration
+7、Spring的自动配置文件在spring-boot-autoconfigure/META-INF/spring.factories下面
 
+自己项目想要集成Spring步骤
+1、创建自己的starter项目
+2、引入自己的项目
+3、引入Spring自动配置项目spring-boot-autoconfigure
+4、在starter项目创建指定文件/META-INF/spring.factories
+5、org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+自己需要注入到Spring容器的Class对象路径
 
