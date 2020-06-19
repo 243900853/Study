@@ -1,0 +1,7 @@
+maven命令
+--跳过测试，清理文件，打包，clean和package顺序是会影响target文件
+mvn clean package -Dmaven.test.skip=true
+
+dos命令
+--相当于debug
+pause
