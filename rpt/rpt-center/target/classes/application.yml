@@ -32,24 +32,31 @@ bloom:
   filter:
     expectedInsertions: 1000
     fpp: 0.001F
-dubbo:
-  application:
-    name: rpt-center
-  registry:
-    address: zookeeper://127.0.0.1:2181
-    # 读者请自行更改zookeeper地址
-    protocol: zookeeper
-    check: false
-  scan:
-    base-packages: com.rpt.system.service
-  monitor:
-    protocol: register
-  consumer:
-    check: false
-    timeout: 3000
-  protocol:
-    name: dubbo
-    port: 30003
+server:
+  port: 8061 #tomcat端口号
+
+
+
+
+
+#dubbo:
+#  application:
+#    name: rpt-center
+#  registry:
+#    address: zookeeper://127.0.0.1:2181
+#    # 读者请自行更改zookeeper地址
+#    protocol: zookeeper
+#    check: false
+#  scan:
+#    base-packages: com.rpt.system.service
+#  monitor:
+#    protocol: register
+#  consumer:
+#    check: false
+#    timeout: 3000
+#  protocol:
+#    name: dubbo
+#    port: 30003
 #  protocols:
 #    p1:
 #      id: dubbo1
@@ -74,5 +81,4 @@ dubbo:
 #    check: false
 #    timeout: 3000
 #
-server:
-  port: 8061
+

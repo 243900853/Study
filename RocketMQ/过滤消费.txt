@@ -1,0 +1,38 @@
+//发送无序消息
+    public static void main(String[] args) throws Exception {
+        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
+        producer.setNamesrvAddr("localhost:9876");
+        producer.start();
+        for (int i = 0; i < 10; i++) {
+            Message msg = new Message("TopicTest" /* Topic */,"Tag"+i /* Tag */,
+                    ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */
+            );
+            msg.putUserProperty("i",i+"");
+            SendResult sendResult = producer.send(msg);
+            System.out.printf("%s%n", sendResult);
+        }
+        producer.shutdown();
+    }
+
+
+//多线程多队列消费无序消息
+    public static void main(String[] args) throws InterruptedException, MQClientException {
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("please_rename_unique_group_name");
+        consumer.setNamesrvAddr("localhost:9876");
+        //注意这里的topic要和消费者的topic一致，这里的第二个参数是筛选过滤，消费Tag0或者Tag1的消息
+        //默认不支持Sql过滤，需要在broker.conf配置里面加enablePropertyFilter=true开启支持Sql过滤
+        consumer.subscribe("TopicTest", "Tag0||Tag1");
+        consumer.subscribe("TopicTest", MessageSelector.bySql("i=3 OR i=4"));
+        consumer.registerMessageListener(new MessageListenerConcurrently() {
+            @Override
+            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+                for (MessageExt msg : msgs) {
+                    System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), new String(msg.getBody()));
+                }
+//                System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            }
+        });
+        consumer.start();
+        System.out.printf("Consumer Started.%n");
+    }

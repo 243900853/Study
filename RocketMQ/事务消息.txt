@@ -1,0 +1,78 @@
+    public static void main(String[] args) throws MQClientException, InterruptedException {
+        TransactionListener transactionListener = new MyTransactionListener();
+        TransactionMQProducer producer = new TransactionMQProducer("please_rename_unique_group_name");
+        producer.setNamesrvAddr("127.0.0.1:9876");
+        producer.setTransactionListener(transactionListener);
+        producer.start();
+        //t1提交 t2回滚 其他挂起
+        String[] tags = new String[] {"t1", "t2", "t3"};
+        for (int i = 0; i < 3; i++) {
+            try {
+                Message msg = new Message("TopicTest", tags[i],
+                                ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET));
+                SendResult sendResult = producer.sendMessageInTransaction(msg, null);
+                System.out.printf("%s%n", sendResult);
+                Thread.sleep(10);
+            } catch (MQClientException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //多线程多队列消费无序消息
+    public static void main(String[] args) throws InterruptedException, MQClientException {
+        //当生产者组内有生产者无法提供事务回调的时候就会由组内其他生产者提供事务回调，生产者A宕机，由生产者B来进行事务回调。
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("please_rename_unique_group_name");
+        consumer.setNamesrvAddr("localhost:9876");
+        consumer.setAllocateMessageQueueStrategy(new AllocateMessageQueueAveragelyByCircle());
+        //注意这里的topic要和消费者的topic一致
+        consumer.subscribe("TopicTest", "*");
+        consumer.registerMessageListener(new MessageListenerConcurrently() {
+            @Override
+            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+                for (MessageExt msg : msgs) {
+                    System.out.printf("%s Receive New Messages: %s Queue：%s Tag：%s %n", Thread.currentThread().getName(), new String(msg.getBody()),msg.getQueueId(),msg.getTags());
+                }
+//                System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            }
+        });
+        consumer.start();
+        System.out.printf("Consumer Started.%n");
+    }
+
+public class MyTransactionListener implements TransactionListener {
+    //本地事务在此处执行
+    @Override
+    public LocalTransactionState executeLocalTransaction(Message msg, Object arg) {
+        System.out.println("执行事务");
+    //本地事务执行过长的时候 可以挂起他
+        //本地事务执行结果依赖别的事务执行的结果的时候可以挂起
+
+       if (msg.getTags().equals("t1")){
+//           connection.commit()
+           return LocalTransactionState.COMMIT_MESSAGE;
+       } else if (msg.getTags().equals("t2")) {
+//           try {
+//
+//           }catch (){
+//
+//           }
+//           connection.rollback()
+           return LocalTransactionState.ROLLBACK_MESSAGE;
+       }
+        return LocalTransactionState.UNKNOW;
+    }
+
+    //A    B
+
+
+    //提供给MQ的回调
+    @Override
+    public LocalTransactionState checkLocalTransaction(MessageExt msg) {
+        //确认本地事务的执行情况 决定 提交还是回滚
+        //代码检查B事务有没有执行完
+        System.out.println("确认回调");
+        return LocalTransactionState.COMMIT_MESSAGE;
+    }
+}
