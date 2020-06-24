@@ -1,0 +1,59 @@
+package com.rpt.system.util;
+
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.selector.SelectMessageQueueByHash;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.common.RemotingHelper;
+
+public class RocketmqProduct {
+
+    //发送有序消息
+    public static void main(String[] args) throws Exception {
+        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
+        producer.setNamesrvAddr("localhost:9876");
+        producer.start();
+        for (int i = 0; i < 10; i++) {
+            Message msg = new Message("TopicTest" /* Topic */,"TagA" /* Tag */,
+                    ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */
+            );
+            //arg需要是唯一的标识，可以存放id
+            SendResult sendResult = producer.send(msg,new SelectMessageQueueByHash(),"1");
+            System.out.printf("%s%n", sendResult);
+        }
+        producer.shutdown();
+    }
+}
+
+
+package com.rpt.system.util;
+
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.consumer.listener.*;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.common.message.MessageExt;
+
+import java.util.List;
+
+public class RocketmqConsumer {
+
+    //MessageListenerOrderly单线程单队列消费有序消息
+    public static void main(String[] args) throws InterruptedException, MQClientException {
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("please_rename_unique_group_name");
+        consumer.setNamesrvAddr("localhost:9876");
+        //注意这里的topic要和消费者的topic一致
+        consumer.subscribe("TopicTest", "*");
+        consumer.registerMessageListener(new MessageListenerOrderly() {
+            @Override
+            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext consumeOrderlyContext) {
+                for (MessageExt msg : msgs) {
+                    System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), new String(msg.getBody()));
+                }
+//                System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
+                return ConsumeOrderlyStatus.SUCCESS;
+            }
+        });
+        consumer.start();
+        System.out.printf("Consumer Started.%n");
+    }
+}
