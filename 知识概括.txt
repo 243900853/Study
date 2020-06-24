@@ -45,3 +45,30 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 4、在starter项目创建指定文件/META-INF/spring.factories
 5、org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 自己需要注入到Spring容器的Class对象路径
+
+Seata流程：
+TC:seata提供的事务管理中心。
+TM:事务的发起者，并且最终与tc通信告诉事务的成功与否
+RM:单个的微服务，也就是最终的资源管理者
+
+1.TM 向 TC 申请开启一个全局事务，TC 创建全局事务后返回全局唯一的 XID，XID 会在全局事务的上下文中传播
+	1.1 开启全局事务的入口：GlobalTransactionScanner extends AbstractAutoProxyCreator implements InitializingBean, ApplicationContextAware
+	1.2 AbstractAutoProxyCreator.wrapIfNecessary方法作用：为了解决单例bean之间的循环依赖问题，提前将代理Bean对象暴露出去，也就是程序如果需要代理Bean，就可以通过这个方式获取到Bean数据，执行自己代理Bean逻辑并返回出去
+		1.2.1 往global_table表插入一条全局事务记录数据
+		1.2.2 创建全局事务后返回全局唯一的 XID
+	1.3 InitializingBean.afterPropertiesSet方法作用：初始化Netty客户端
+2.RM 向 TC 注册分支事务，该分支事务归属于拥有相同 XID 的全局事务
+	2.1 往branch_table表插入一条分支事务数据，每个操作数据库的微服务插入一条
+		2.2.1 怎么确保每个操作数据库的微服务都插入一条?此时就用到了DataSourceProxy这个代理数据源
+		2.2.2 DataSourceProxy代理数据源的主要功能是在执行本地sql前，插入业务逻辑，这样就能做到拦截每个操作数据库的微服务
+		2.2.3 此时不是所有的微服务都拦截，DataSourceProxy里面的逻辑只拦截在全局事务里面的分支事务，判断标准就是有没有XID
+	2.2 往lock_table表插入一条数据，存放被锁住的对应数据源，防止多线程操作数据源导致赃数据
+	2.3 执行前置镜像，保存数据库操作前数据源
+	2.4 执行本地sql，操作数据库，不提交事务
+	2.5 执行后置镜像，保存数据库操作后数据源
+	2.6 RM 向 TC 注册分支事务，该分支事务归属于拥有相同 XID 的全局事务
+	2.7 前置镜像和后置镜像的返回结果组装成undoLog对象，插入到undo_log表中，不提交事务
+	2.8 本地sql、undo_log表数据一起提交事务
+	2.9 向 TC 报告一阶段执行情况
+3.TM 向 TC 发起全局提交或回滚；
+4.TC 调度 XID 下的分支事务完成提交或者回滚。
