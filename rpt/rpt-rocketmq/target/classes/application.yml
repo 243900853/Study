@@ -1,0 +1,19 @@
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: rpt_rocketmq_producer
+server:
+  port: 5000
+dubbo:
+  application:
+    name:  rpt-web
+  registry:
+    address: zookeeper://127.0.0.1:2181
+    # 读者请换成自己的zookeeperip
+    protocol: zookeeper
+    check: false
+  monitor:
+    protocol: register
+  consumer:
+    check:  false
+    timeout: 3000

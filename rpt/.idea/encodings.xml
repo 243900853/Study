@@ -4,7 +4,7 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpt-api" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpt-center" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rpt-interface" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rpt-rocketmq" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpt-web" charset="UTF-8" />
   </component>
 </project>

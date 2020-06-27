@@ -2,6 +2,7 @@ package com;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.rpt.system.bean.Menu;
+import com.rpt.system.service.ConfigService;
 import com.rpt.system.service.MenuService;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -14,6 +15,8 @@ public class TestDubbo {
 
     @Reference
     private MenuService menuService;
+    @Reference
+    private ConfigService configService;
 
     @org.junit.Test
     public void jdbcTest(){
