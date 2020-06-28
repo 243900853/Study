@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="rpt-web" />
         <module name="rpt-center" />
+        <module name="rpt-rocketmq" />
         <module name="rpt-api" />
       </profile>
     </annotationProcessing>

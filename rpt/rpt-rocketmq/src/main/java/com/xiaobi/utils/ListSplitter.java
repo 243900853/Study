@@ -1,4 +1,4 @@
-package com.rpt.system.util;
+package com.xiaobi.utils;
 
 import org.apache.rocketmq.common.message.Message;
 

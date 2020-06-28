@@ -1,3 +1,7 @@
+public class RocketmqProduct {
+
+    //发送事务消息
+    //总共是一分钟回调一次，如果回调没有找到对应的生产者，就会在等一分钟在回调一次
     public static void main(String[] args) throws MQClientException, InterruptedException {
         TransactionListener transactionListener = new MyTransactionListener();
         TransactionMQProducer producer = new TransactionMQProducer("please_rename_unique_group_name");
@@ -18,6 +22,9 @@
             }
         }
     }
+}
+
+public class RocketmqConsumer {
 
     //多线程多队列消费无序消息
     public static void main(String[] args) throws InterruptedException, MQClientException {
@@ -40,6 +47,8 @@
         consumer.start();
         System.out.printf("Consumer Started.%n");
     }
+
+}
 
 public class MyTransactionListener implements TransactionListener {
     //本地事务在此处执行
@@ -74,5 +83,16 @@ public class MyTransactionListener implements TransactionListener {
         //代码检查B事务有没有执行完
         System.out.println("确认回调");
         return LocalTransactionState.COMMIT_MESSAGE;
+    }
+}
+
+public class CallBackTransactionProduct {
+    //发送事务消息的生产者宕机，这个生产者只提供回调，供消费者能正常的消费消息
+    public static void main(String[] args) throws MQClientException, InterruptedException {
+        TransactionListener transactionListener = new MyTransactionListener();
+        TransactionMQProducer producer = new TransactionMQProducer("please_rename_unique_group_name");
+        producer.setNamesrvAddr("127.0.0.1:9876");
+        producer.setTransactionListener(transactionListener);
+        producer.start();
     }
 }

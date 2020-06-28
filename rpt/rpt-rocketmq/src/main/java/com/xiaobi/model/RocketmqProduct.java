@@ -1,4 +1,4 @@
-package com.rpt.system.mq;
+package com.xiaobi.model;
 
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -108,6 +108,7 @@ public class RocketmqProduct {
 //    }
 
     //发送事务消息
+    //总共是一分钟回调一次，如果回调没有找到对应的生产者，就会在等一分钟在回调一次
     public static void main(String[] args) throws MQClientException, InterruptedException {
         TransactionListener transactionListener = new MyTransactionListener();
         TransactionMQProducer producer = new TransactionMQProducer("please_rename_unique_group_name");
