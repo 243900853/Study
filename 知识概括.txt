@@ -67,7 +67,8 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 5、org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 自己需要注入到Spring容器的Class对象路径
 
-Seata流程：
+
+Seata流程
 TC:seata提供的事务管理中心。
 TM:事务的发起者，并且最终与tc通信告诉事务的成功与否
 RM:单个的微服务，也就是最终的资源管理者
