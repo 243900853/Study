@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9c0c101b-01a1-4b07-a151-5aadb2a4b319" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../rpt/src/main/java/com/xiaobi/config/DataSourcesConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../rpt/src/main/java/com/xiaobi/config/DataSourcesConfig.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -129,6 +128,7 @@
       <workItem from="1588688219774" duration="843000" />
       <workItem from="1588773910492" duration="19165000" />
       <workItem from="1589613498326" duration="17824000" />
+      <workItem from="1593954123669" duration="2411000" />
     </task>
     <servers />
   </component>
