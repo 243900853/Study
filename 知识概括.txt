@@ -111,6 +111,13 @@ RM:单个的微服务，也就是最终的资源管理者
 		4.1.4 分支事务表删除完之后，服务端根据xid(全局事务id)删除global_table表数据
 		4.1.5 表数据都删除完之后在进行全局事务提交
 
+Tomcat工作流程
+1、linux系统内部会实现tcp协议，通过socket连接对外提供接口访问方法。
+2、客户端会按照http协议将数据拼接好，跟操作系统进行tcp协议数据传输，tomcat通过http协议规范解析tcp传输过来的数据。
+3、tomcat通过socket获取到tcp传输过来的数据，他会先根据配置文件判断要使用那种协议处理器去解析传输过来的http协议数据。
+4、如果使用bio模型就是用JioEndPoint去解析，如果是nio就是NioEndPoint去解析，如果是其他的就是用其他的Endpoint去解析socket传输过来的数据。
+5、EndPoint会将数据解析成请求头、请求行、请求体然后封装成Request对象传到Servlet
+=======
 RocketMQ
 生产者发送消息给nameserver，nameserver根据topic找到对应的broker存放
 topic内部默认有8个队列，4读4写，之间不是一一对应，读写数据会进行同步
