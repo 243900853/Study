@@ -18,6 +18,27 @@ SpringMVC
 
 
 Dubbo
+
+dubbo在zookeeper注册服务：生产者会先注册以服务全路径作为主节点，然后会按照生产者的配置在主节点下面存放不同协议的子节点。比如com.rpt.system.service.MenuService
+	dubbo://ip:20880/com.rpt.system.service.MenuService,http://ip:20880/com.rpt.system.service.MenuService
+
+消费者会先根据com.rpt.system.service.MenuService找子节点，然后通过netty去访问远程服务
+
+调用远程服务过程：
+1、生产者注册服务，将接口注册到注册中心。Map<接口类名,url集合>
+2、生产者本地注册，将接口的实现类保存起来。Map<接口类名,实现类>
+3、生产者启动内置的tomcat，将服务暴露出去，供生产者调用。
+	3.1、启动内置的tomcat后，会拦截所有请求，将请求转到dispatch里面。
+	3.2、接收请求后，反序列化请求参数，根据接口类名在本地注册里面找到实现类class。
+	3.3、class.getMethod根据方法名和方法参数类型通过反射技术找到类需要调用的方法method。
+	3.4、method.invoke根据实现类和方法参数值通过反射技术去执行方法。
+	3.5、将返回值通过resp.getOutputStream()返回出去。
+4、消费者调用远程服务
+	4.1、消费者将接口类名+接口方法名+方法参数类型+方法参数值等这些信息包装在Invocation里面
+	4.2、消费者通过配置信息获取协议、ip、协议等信息
+	4.3、序列化配置信息和Invocation信息
+	4.4、通过http请求或者netty将请求发送出去
+
 生产者
 1、生产者提供接口，供消费者使用
 2、生产者实现接口，处理业务逻辑
