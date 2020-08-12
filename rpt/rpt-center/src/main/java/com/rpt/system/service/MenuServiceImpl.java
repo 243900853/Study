@@ -1,7 +1,9 @@
 package com.rpt.system.service;
 
 
+import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.rpt.system.bean.Menu;
 import com.rpt.system.dao.MenuDao;
 import com.rpt.system.mapper.MenuMapper;
@@ -24,5 +26,11 @@ public class MenuServiceImpl implements MenuService {
 
     public List<Menu> queryMenuByLevelToMybatis(String level) {
         return menuMapper.queryMenuByLevel(level);
+    }
+
+    public String queryMenuById(String menuId) {
+        System.out.println("执行了");
+        URL url = RpcContext.getContext().getUrl();
+        return String.format("%s:%s,Hello,%s",url.getProtocol(),url.getPort(),menuId);
     }
 }

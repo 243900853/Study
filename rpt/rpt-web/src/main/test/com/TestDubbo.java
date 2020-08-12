@@ -13,7 +13,7 @@ import java.util.List;
 @org.springframework.boot.test.context.SpringBootTest(classes = ConsumerApp.class)
 public class TestDubbo {
 
-    @Reference
+    @Reference(loadbalance = "roundrobin")//轮询负载均衡
     private MenuService menuService;
     @Reference
     private ConfigService configService;
@@ -33,4 +33,13 @@ public class TestDubbo {
             System.out.println(menu.getName());
         }
     }
+
+    @org.junit.Test
+    public void localTest(){
+        for (int i=0;i<100;i++){
+            String menuId = menuService.queryMenuById("1");
+            System.out.println(menuId);
+        }
+
+    };
 }
