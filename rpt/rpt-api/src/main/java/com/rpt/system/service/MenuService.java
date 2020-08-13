@@ -8,5 +8,5 @@ public interface MenuService<T> {
 
     public List<T> queryMenuByLevel(String level);
     public List<T> queryMenuByLevelToMybatis(String level);
-    public String queryMenuById(String menuId);
+    public String roundRobin(String name);
 }
