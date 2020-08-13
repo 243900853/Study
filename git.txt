@@ -31,6 +31,8 @@ git push --set-upstream https://github.com/243900853/SpirngBoot.git master
 git pull
 --删除
 git rm 25946
+--删除缓存
+git rm --cached "面试的常见知识.docx"
 --下载单个文件
 git checkout -m Spring源码.docx
 
@@ -55,3 +57,8 @@ git config --get http.proxy
 --覆盖本地文件
 git reset
 git checkout .
+
+--彻底回退到某个版本，本地的源码也会变为上一个版本的内容，撤销的commit中所包含的更改被冲掉
+--如果执行了git add . 或者 git commit -m ""操作后，发现内容有冲突，可以直接用这个回退到修改以前的版本
+git reset --hard
+git pull
