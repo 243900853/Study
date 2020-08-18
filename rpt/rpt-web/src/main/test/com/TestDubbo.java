@@ -50,4 +50,5 @@ public class TestDubbo {
     public void timeoutTest(){
         demoService.timeout();
     }
+    
 }
