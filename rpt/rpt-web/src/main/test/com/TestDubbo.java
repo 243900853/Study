@@ -27,12 +27,14 @@ public class TestDubbo {
     @Reference
     private ConfigService configService;
     //【服务降级】
+    //MenuServiceMock implement MenuService;
     //mock = "fail: return 123" 服务访问失败直接返回123
-    //mock = "true" 服务访问失败调用MenuServiceMock.失败的方法;MenuServiceMock implement MenuService;也可以直接给类名
-    // 【本地存根】
+    //mock = "true" 服务调用失败则执行MenuServiceMock.失败的方法;也可以直接给类名
+    //【本地存根】
     //stub = "true"
-    // 消费端调用远程方法的时候会先找到"接口名+Stub"的类对象，并先执行stub里面的远程方法
-    // 在执行远程服务时，如果中间报错，有捕获异常则处理异常逻辑，没有则会回调mock的远程方法，来进行异常的捕获与处理
+    // 消费端调用远程方法的时候会先找到"接口名+Stub"的类对象，并先执行stub里面的方法,在调用远程方法
+    // stub中在执行远程服务时，如果中间报错，有捕获异常则处理异常逻辑
+    // 没有则会回调mock的远程方法，来进行异常的捕获与处理
     @Reference(timeout = 1000,mock = "true",stub = "true")
     private DemoService demoService;
 
